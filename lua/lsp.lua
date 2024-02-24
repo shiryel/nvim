@@ -316,6 +316,12 @@ lspconfig.typst_lsp.setup({
   end
 })
 
+-- TERRAFORM
+lspconfig.terraformls.setup({
+  on_attach = on_attach,
+  capabilities = capabilities(),
+})
+
 -- DART
 -- NOTE: May need the command `dart pub get` to work correctly
 --

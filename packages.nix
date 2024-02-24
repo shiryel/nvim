@@ -31,18 +31,19 @@
     zls # Zig
     rust-analyzer # Rust
     #python39Packages.gdtoolkit # GDScript
-    python310Packages.python-lsp-server # pylsp
+    #python310Packages.python-lsp-server # pylsp
     nodePackages.svelte-language-server
-    #vscode-langservers-extracted # JS
+    vscode-langservers-extracted # JS
     typst-lsp
     lua-language-server
+    terraform-ls
 
     # Formatters
     nixpkgs-fmt # Nix
     rustfmt # Rust
 
     neovim
-    neovide
+    #neovide
     gcc
   ];
 }

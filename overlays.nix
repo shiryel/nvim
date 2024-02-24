@@ -75,6 +75,7 @@ in
             tree-sitter-llvm
             tree-sitter-clojure
             tree-sitter-commonlisp
+            tree-sitter-hcl # terraform / tofu
             #tree-sitter-kotlin
             tree-sitter-zig
             tree-sitter-lua

@@ -4,7 +4,7 @@ Configure with:
 ```nix
 {
   inputs = {
-    neovim.url = "github:shiryel/neovim/master";
+    neovim.url = "github:shiryel/nvim/master";
   };
 
   outputs = { self, nixpkgs, ... }@inputs: {
