@@ -40,22 +40,22 @@ o.encoding = "utf8"
 o.number = true
 o.relativenumber = true -- line number is relative to cursor
 o.mouse = "a"           -- enable mouse
-o.cursorline = false    -- dont highlight the current cursor line
+o.cursorline = true     -- highlight the current cursor line
 o.smartindent = true    -- smart ident (priority for C like langs)
 o.autoindent = true     -- copy the ident of current line when using the o or O commands
 o.wrap = true           -- continue long lines in the next line
 o.linebreak = true
 o.lazyredraw = true     -- screen will not redrawn while exec macros, registers or not typed commands
-o.showmatch = true      -- jump to a match when executed
+o.showmatch = false     -- jump to a match when executed
 o.showmode = false      -- lightline shows the status not vim
 o.showtabline = 2       -- always show files with tab page labels
 o.shortmess =
 "ac"                    -- avoid hit-enter prompts, a = abbreviation without loss, c = avoid showing message extra message when using completion
 o.updatetime = 300      -- time (ms) to save in swap.  You will have bad experience for diagnostic messages when it's default 4000.
-o.signcolumn = "no"     -- hide the column for error signs
+o.signcolumn = "yes"    -- column for error signs
 o.showcmd = true        -- show commands in the last line off screen
 o.cmdheight = 2         -- better display for messages
-o.scrolloff = 10        -- centers the cursor when moving
+o.scrolloff = 5         -- centers the cursor when moving
 -- give us a realtime preview of substitution before we send it "set list " show formating characters
 o.inccommand = "nosplit"
 o.lcs = "eol:\194\172,extends:\226\157\175,precedes:\226\157\174,tab:>-" -- the formating characters
@@ -77,8 +77,8 @@ do end
 (o.path):append({ "**" }) -- list of directories which will be searched when using the |gf|, [f, ]f, ^Wf, |:find|, |:sfind|, |:tabfind| and other commands
 
 -- Split / Diff
-o.splitbelow = true       -- default split below
-o.diffopt = "vertical"    -- default diff split in the vertical
+o.splitbelow = true    -- default split below
+o.diffopt = "vertical" -- default diff split in the vertical
 
 -- Searching
 o.incsearch = true  -- show when typing
@@ -125,10 +125,10 @@ end
 -- (we use aerial to navigate and fold to handle HTML)
 o.foldmethod = "expr"
 o.foldexpr = "nvim_treesitter#foldexpr()"
-o.foldenable = false      -- use zi to togle folding
-o.foldlevelstart = 1      -- some folds closed when start editing (1)
-o.foldnestmax = 20        -- limit the folds in the indent and syntax
-o.foldminlines = 1        -- limit the folds in the indent and syntax
+o.foldenable = false -- use zi to togle folding
+o.foldlevelstart = 1 -- some folds closed when start editing (1)
+o.foldnestmax = 20   -- limit the folds in the indent and syntax
+o.foldminlines = 1   -- limit the folds in the indent and syntax
 
 nnoremap("<leader>z", "za", "Toogle folder under cursor")
 nnoremap("<leader>Z", "zA", "Toogle all folders under cursor")
@@ -164,14 +164,15 @@ nnoremap("<leader>/", ":noh<cr>", "unselect")
 nnoremap("<leader><tab>", ":retab<cr>", "tabs to spaces")
 
 -- Open terminal
-nnoremap("<leader>T", ":sp <Bar> :terminal<cr> <bar> i", "open terminal")
+--nnoremap("<leader>T", ":sp <Bar> :terminal<cr> <bar> i", "open terminal")
+nnoremap("<leader>T", ":botright terminal<cr> <bar> i", "open terminal")
 
 -- Aerial --
 nnoremap("<leader>a", "<cmd>AerialToggle!<cr>", "toggle aerial")
 
--- Nvim Tree --
-nnoremap("<leader>e", ":NvimTreeFindFile<cr>", "open file tree")
-nnoremap("<leader>E", ":NvimTreeToggle<cr>", "toggle file tree")
+-- Oil --
+local oil = require("oil")
+nnoremap("<leader>e", oil.open, "open parent directory")
 
 -- Fzf-lua --
 local fzf = require('fzf-lua')
@@ -181,7 +182,7 @@ nnoremap("<Leader>sF", fzf.oldfiles, "opened files history")
 nnoremap("<Leader>st", fzf.tabs, "open tabs")
 nnoremap("<Leader>sT", fzf.tags, "search project tags")
 nnoremap("<Leader>sa", fzf.grep_project, "search all project lines")
-nnoremap("<Leader>ss", fzf.live_grep, "live grep current project")
+nnoremap("<Leader>ss", fzf.live_grep_glob, "live grep current project")
 nnoremap("<Leader>sS", fzf.live_grep_resume, "live grep continue last search")
 nnoremap("<Leader>sh", fzf.search_history, "search history")
 nnoremap("<Leader>sq", fzf.quickfix, "quickfix list")

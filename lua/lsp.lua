@@ -1,4 +1,8 @@
 -- https://learn.microsoft.com/en-us/dotnet/api/microsoft.visualstudio.languageserver.protocol.servercapabilities
+--
+-- TODO:
+-- maybe use `:h vim.lsp.buf` functions
+
 local function on_attach(client, bufnr)
   local fzf = require('fzf-lua')
   local cap = client.server_capabilities
@@ -79,6 +83,8 @@ local function on_attach(client, bufnr)
   end
 
   -- HELPERS --
+
+  vim.lsp.inlay_hint.enable(true)
 
   -- Displays hover information about the symbol under the cursor in a floating
   -- window. Calling the function twice will jump into the floating window

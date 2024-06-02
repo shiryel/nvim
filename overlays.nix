@@ -24,6 +24,7 @@ in
           ${builtins.readFile ./lua/plugins.lua}
           ${builtins.readFile ./lua/lsp.lua}
           ${builtins.readFile ./lua/configs.lua}
+          ${builtins.readFile ./lua/dap.lua}
         EOF
       '';
       # myPlugins can be any name
@@ -42,6 +43,11 @@ in
           nvim-lspconfig
           aerial-nvim
           #flutter-tools-nvim # sets up dartls + flutter utils
+          #
+          # DEBUGGER
+          #
+          nvim-dap
+          nvim-dap-ui
           #
           # COMPLETION
           #
@@ -104,7 +110,7 @@ in
             tree-sitter-regex
             tree-sitter-graphql
           ]))
-          kotlin-vim
+          #kotlin-vim
           typst-vim
           #nvim-treesitter-textobjects
           #
@@ -115,7 +121,7 @@ in
           #
           # NAVIGATION
           #
-          nvim-tree-lua
+          oil-nvim
           nvim-web-devicons
           fzf-lua
           #plenary-nvim
