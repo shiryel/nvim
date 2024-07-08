@@ -170,9 +170,12 @@ nnoremap("<leader>T", ":botright terminal<cr> <bar> i", "open terminal")
 -- Aerial --
 nnoremap("<leader>a", "<cmd>AerialToggle!<cr>", "toggle aerial")
 
+-- Nvim Tree --
+nnoremap("<leader>e", ":NvimTreeFindFile<cr>", "open file tree")
+nnoremap("<leader>E", ":NvimTreeToggle<cr>", "toggle file tree")
 -- Oil --
-local oil = require("oil")
-nnoremap("<leader>e", oil.open, "open parent directory")
+--local oil = require("oil")
+--nnoremap("<leader>e", oil.open, "open parent directory")
 
 -- Fzf-lua --
 local fzf = require('fzf-lua')

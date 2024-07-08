@@ -44,6 +44,7 @@
 
     neovim
     #neovide
+
     gcc
   ];
 }

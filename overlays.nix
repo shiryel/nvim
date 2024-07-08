@@ -121,7 +121,8 @@ in
           #
           # NAVIGATION
           #
-          oil-nvim
+          #oil-nvim # TODO: wait for https://github.com/stevearc/oil.nvim/issues/117
+          nvim-tree-lua
           nvim-web-devicons
           fzf-lua
           #plenary-nvim

@@ -142,45 +142,110 @@ require("aerial").setup({
   end,
 })
 
-require("oil").setup({
-  -- Keymaps in oil buffer. Can be any value that `vim.keymap.set` accepts OR a table of keymap
-  -- options with a `callback` (e.g. { callback = function() ... end, desc = "", mode = "n" })
-  -- Additionally, if it is a string that matches "actions.<name>",
-  -- it will use the mapping at require("oil.actions").<name>
-  -- Set to `false` to remove a keymap
-  -- See :help oil-actions for a list of all available actions
-  keymaps = {
-    ["g?"] = "actions.show_help",
-    ["<CR>"] = "actions.select",
-    ["<C-s>"] = "actions.select_vsplit",
-    ["<C-h>"] = "actions.select_split",
-    ["<C-t>"] = "actions.select_tab",
-    ["<C-p>"] = "actions.preview",
-    ["<C-c>"] = "actions.close",
-    ["<C-l>"] = "actions.refresh",
-    ["<C-up>"] = "actions.parent",
-    ["_"] = "actions.open_cwd",
-    ["`"] = "actions.cd",
-    ["~"] = "actions.tcd",
-    ["gs"] = "actions.change_sort",
-    ["gx"] = "actions.open_external",
-    ["g."] = "actions.toggle_hidden",
-    ["g\\"] = "actions.toggle_trash",
+require("nvim-tree").setup({
+  on_attach = function(bufnr)
+    -- use :NvimTreeGenerateOnAttach to generate this function
+    local function noremap(bind, command, desc)
+      return vim.keymap.set("n", bind, command,
+        { buffer = bufnr, noremap = true, silent = true, nowait = true, desc = 'nvim-tree: ' .. desc })
+    end
+    local api = require('nvim-tree.api')
+    api.config.mappings.default_on_attach(bufnr) -- default mapping
+
+    noremap('<C-up>', api.tree.change_root_to_parent, "Dir up")
+    noremap('s', api.node.open.vertical, "Open: Vertical Split")
+    noremap('v', api.node.open.horizontal, "Open: Horizontal Split")
+    noremap('?', api.tree.toggle_help, "Help")
+    noremap('P',
+      function()
+        local node = api.tree.get_node_under_cursor()
+        print(node.absolute_path)
+      end, "Print Node Path")
+  end,
+  disable_netrw = true,
+  hijack_netrw = false,
+  sort_by = "case_sensitive",
+  sync_root_with_cwd = true, -- may change root when dir change
+  respect_buf_cwd = true,    -- change to cwd when opening
+  update_focused_file = {
+    enable = false,
+    update_root = false
   },
-  -- EXPERIMENTAL support fja or performing file operations with git
-  git = {
-    -- Return true to automatically git add/mv/rm files
-    add = function(path)
-      return true
-    end,
-    mv = function(src_path, dest_path)
-      return true
-    end,
-    rm = function(path)
-      return true
-    end,
+  diagnostics = {
+    enable = true,
+    show_on_dirs = true,
+    icons = {
+      hint = "",
+      info = "",
+      warning = "",
+      error = ""
+    }
   },
+  modified = {
+    enable = true
+  },
+  view = {
+    width = 36,
+  },
+  renderer = {
+    root_folder_label = false,
+    add_trailing = true
+  },
+  filters = {
+    dotfiles = false
+  },
+  actions = {
+    open_file = {
+      quit_on_open = false
+    }
+  },
+  tab = {
+    sync = {
+      open = true,
+      close = true
+    }
+  }
 })
+
+--require("oil").setup({
+--  -- Keymaps in oil buffer. Can be any value that `vim.keymap.set` accepts OR a table of keymap
+--  -- options with a `callback` (e.g. { callback = function() ... end, desc = "", mode = "n" })
+--  -- Additionally, if it is a string that matches "actions.<name>",
+--  -- it will use the mapping at require("oil.actions").<name>
+--  -- Set to `false` to remove a keymap
+--  -- See :help oil-actions for a list of all available actions
+--  keymaps = {
+--    ["g?"] = "actions.show_help",
+--    ["<CR>"] = "actions.select",
+--    ["<C-s>"] = "actions.select_vsplit",
+--    ["<C-h>"] = "actions.select_split",
+--    ["<C-t>"] = "actions.select_tab",
+--    ["<C-p>"] = "actions.preview",
+--    ["<C-c>"] = "actions.close",
+--    ["<C-l>"] = "actions.refresh",
+--    ["<C-up>"] = "actions.parent",
+--    ["_"] = "actions.open_cwd",
+--    ["`"] = "actions.cd",
+--    ["~"] = "actions.tcd",
+--    ["gs"] = "actions.change_sort",
+--    ["gx"] = "actions.open_external",
+--    ["g."] = "actions.toggle_hidden",
+--    ["g\\"] = "actions.toggle_trash",
+--  },
+--  -- EXPERIMENTAL support fja or performing file operations with git
+--  git = {
+--    -- Return true to automatically git add/mv/rm files
+--    add = function(path)
+--      return true
+--    end,
+--    mv = function(src_path, dest_path)
+--      return true
+--    end,
+--    --rm = function(path)
+--    --  return true
+--    --end,
+--  },
+--})
 
 require("gitsigns").setup({
   numhl = true,
