@@ -3,13 +3,16 @@
 -- TODO:
 -- maybe use `:h vim.lsp.buf` functions
 
+-- NOTE: some LSPs (like csharp-ls) say that they don't have some capabilities, but they do
+-- so we don't check the following capabilities: documentFormattingProvider, hoverProvider
+
 local function on_attach(client, bufnr)
   local fzf = require('fzf-lua')
   local cap = client.server_capabilities
   -- inspect(cap)
 
   local function noremap(bind, command, desc)
-    return vim.keymap.set("n", bind, command, {buffer = bufnr, silent = true, noremap = true, desc = desc})
+    return vim.keymap.set("n", bind, command, { buffer = bufnr, silent = true, noremap = true, desc = desc })
   end
 
   -- COMPLETION --
@@ -36,9 +39,7 @@ local function on_attach(client, bufnr)
   local b = vim.lsp.buf
 
   -- Formats the current buffer
-  if cap.documentFormattingProvider then
-    noremap("<leader>f", b.format, "format")
-  end
+  noremap("<leader>f", b.format, "format")
   -- Formats a given range
   if cap.documentRangeFormattingProvider then
     noremap("<leader>F", b.range_formatting, "format range")
@@ -65,7 +66,7 @@ local function on_attach(client, bufnr)
   --end
 
   -- GOTO --
-  
+
   -- Jumps to the definition of the symbol under the cursor
   -- Jumps to the declaration of the symbol under the cursor (less used by LSPs)
   if cap.definitionProvider then
@@ -88,9 +89,7 @@ local function on_attach(client, bufnr)
 
   -- Displays hover information about the symbol under the cursor in a floating
   -- window. Calling the function twice will jump into the floating window
-  if cap.hoverProvider then
-    noremap("<leader>h", b.hover, "show symbol info")
-  end
+  noremap("<leader>h", b.hover, "show symbol info")
 
   -- Displays signature information about the symbol under the cursor in a
   -- floating window
@@ -139,21 +138,23 @@ local function on_attach(client, bufnr)
     vim.api.nvim_create_augroup("lsp_document_highlight", { clear = true })
     vim.api.nvim_clear_autocmds { buffer = bufnr, group = "lsp_document_highlight" }
     vim.api.nvim_create_autocmd("CursorHold", {
-        callback = b.document_highlight,
-        buffer = bufnr,
-        group = "lsp_document_highlight",
-        desc = "Document Highlight",
+      callback = b.document_highlight,
+      buffer = bufnr,
+      group = "lsp_document_highlight",
+      desc = "Document Highlight",
     })
     vim.api.nvim_create_autocmd("CursorMoved", {
-        callback = b.clear_references,
-        buffer = bufnr,
-        group = "lsp_document_highlight",
-        desc = "Clear All the References",
+      callback = b.clear_references,
+      buffer = bufnr,
+      group = "lsp_document_highlight",
+      desc = "Clear All the References",
     })
   end
 end
 
 local function capabilities()
+  --local default_cap = vim.lsp.protocol.make_client_capabilities()
+  --return require("cmp_nvim_lsp").default_capabilities(default_cap)
   return require("cmp_nvim_lsp").default_capabilities()
 end
 
@@ -164,72 +165,108 @@ local lsp_util = require 'lspconfig.util'
 
 -- ELIXIR
 lspconfig.elixirls.setup({
-  on_attach = on_attach, 
-  capabilities = capabilities(), 
-  cmd = {"elixir-ls"},
+  on_attach = on_attach,
+  capabilities = capabilities(),
+  cmd = { "elixir-ls" },
   root_dir = function(fname)
     -- find mix.exs before git, as sometimes we have a project on a subdirectory
-    return lsp_util.root_pattern 'mix.exs'(fname) or lsp_util.find_git_ancestor(fname) or vim.loop.os_homedir()
+    return lsp_util.root_pattern 'mix.exs' (fname) or lsp_util.find_git_ancestor(fname) or vim.loop.os_homedir()
   end,
+})
+
+-- TAILWIND
+lspconfig.tailwindcss.setup({
+  on_attach = on_attach,
+  capabilities = capabilities(),
+  cmd = { 'tailwindcss-language-server', '--stdio' },
+  settings = {
+    tailwindCSS = {
+      colorDecorators = false, -- kinda buggy
+      includeLanguages = {
+        elixir = "html-eex",
+        eelixir = "html-eex",
+        heex = "html-eex",
+      },
+      experimental = {
+        classRegex = {
+          'class[:]\\s*"([^"]*)"',
+        },
+      },
+    },
+  },
+  root_dir = function(fname)
+    return lsp_util.root_pattern(
+          "mix.exs",
+          "tailwind.config.js",
+          "tailwind.config.ts",
+          "postcss.config.js",
+          "postcss.config.ts",
+          "package.json",
+          "node_modules",
+          ".git"
+        )(fname) or
+        lsp_util.find_git_ancestor(fname) or
+        vim.loop.os_homedir()
+  end
 })
 
 -- GDSCRIPT
 lspconfig.gdscript.setup({
-  on_attach = on_attach, 
-  capabilities = capabilities(), 
-  flags = {debounce_text_changes = 50}
+  on_attach = on_attach,
+  capabilities = capabilities(),
+  flags = { debounce_text_changes = 50 }
 })
 
 -- GDSCRIPT formater
 lspconfig.efm.setup({
-  on_attach = on_attach, 
-  capabilities = capabilities(), 
-  filetypes = {"gdscript"}, 
-  flags = {debounce_text_changes = 50}, 
-  init_options = {documentFormatting = true}, 
+  on_attach = on_attach,
+  capabilities = capabilities(),
+  filetypes = { "gdscript" },
+  flags = { debounce_text_changes = 50 },
+  init_options = { documentFormatting = true },
   settings = {
-    rootMarkers = {"project.godot", ".git/"}, 
-    lintDebounce = 100, 
+    rootMarkers = { "project.godot", ".git/" },
+    lintDebounce = 100,
     languages = {
       gdscript = {
-        formatCommand = "gdformat -l 100", 
+        formatCommand = "gdformat -l 100",
         formatStdin = true
       }
     }
   },
-  cmd = {"efm-langserver"}
+  cmd = { "efm-langserver" }
 })
 
 -- LUA
 lspconfig.lua_ls.setup({
   on_attach = on_attach,
   capabilities = capabilities(),
-  cmd = {"lua-language-server"}
+  cmd = { "lua-language-server" }
 })
 
 -- ZIG
 lspconfig.zls.setup({
-  on_attach = on_attach, 
-  capabilities = capabilities(), 
-  cmd = {"zls"}
+  on_attach = on_attach,
+  capabilities = capabilities(),
+  cmd = { "zls" }
 })
 
 -- KOTLIN
 lspconfig.kotlin_language_server.setup({
-  on_attach = on_attach, 
-  capabilities = capabilities(), 
-  cmd = {"kotlin-language-server"}
+  on_attach = on_attach,
+  capabilities = capabilities(),
+  cmd = { "kotlin-language-server" }
 })
 
 -- NIX
 lspconfig.nil_ls.setup({
-  on_attach = on_attach, 
-  capabilities = capabilities(), 
-  cmd = {"nil"},
+  on_attach = on_attach,
+  capabilities = capabilities(),
+  cmd = { "nil" },
   settings = {
     ['nil'] = {
       formatting = {
-        command = {"nixpkgs-fmt"}
+        command = { "nixpkgs-fmt" }
       },
       nix = {
         flake = {
@@ -245,8 +282,8 @@ lspconfig.nil_ls.setup({
 -- TODO: wait until nixd have better integration with flakes
 -- https://github.com/nix-community/nixd/blob/main/docs/user-guide.md
 --lspconfig.nixd.setup({
---  on_attach = on_attach, 
---  capabilities = capabilities(), 
+--  on_attach = on_attach,
+--  capabilities = capabilities(),
 --  cmd = {"nixd"},
 --  settings = {
 --    ['nixd'] = {
@@ -274,42 +311,71 @@ lspconfig.nil_ls.setup({
 
 -- C
 lspconfig.clangd.setup({
-  on_attach = on_attach, 
-  capabilities = capabilities(), 
-  cmd = {"clangd", "--background-index", "--enable-config"}
+  on_attach = on_attach,
+  capabilities = capabilities(),
+  cmd = { "clangd", "--background-index", "--enable-config" }
   --cmd = {"ccls"}
 })
 
 -- RUST
 lspconfig.rust_analyzer.setup({
-  on_attach = on_attach, 
-  capabilities = capabilities(), 
-  cmd = {"rust-analyzer"}
+  on_attach = on_attach,
+  capabilities = capabilities(),
+  -- https://github.com/rust-lang/rust-analyzer/blob/master/docs/user/generated_config.adoc
+  settings = {
+    ["rust-analyzer"] = {
+      checkOnSave = false,
+      check = {
+        ignore = { "dead_code" },
+      },
+      imports = {
+        granularity = {
+          group = "module",
+        },
+        prefix = "self",
+      },
+      cargo = {
+        buildScripts = {
+          enable = true,
+        },
+      },
+      procMacro = {
+        enable = true
+      },
+    }
+  },
+  cmd = { "rust-analyzer" }
 })
 
 -- HASKELL
 lspconfig.hls.setup({
-  on_attach = on_attach, 
-  capabilities = capabilities(), 
-  cmd = {"haskell-language-server"}
+  on_attach = on_attach,
+  capabilities = capabilities(),
+  cmd = { "haskell-language-server" }
 })
 
 -- PYTHON
 lspconfig.pylsp.setup({
-  on_attach = on_attach, 
+  on_attach = on_attach,
   capabilities = capabilities(),
-  cmd = {"pylsp"}
+  cmd = { "pylsp" }
 })
 
 -- JS
 lspconfig.eslint.setup({
-  on_attach = on_attach, 
+  on_attach = on_attach,
+  capabilities = capabilities(),
+})
+
+-- C#
+lspconfig.csharp_ls.setup({
+  on_attach = on_attach,
   capabilities = capabilities(),
 })
 
 -- SVELTE
 lspconfig.svelte.setup({
-  on_attach = on_attach, 
+  on_attach = on_attach,
   capabilities = capabilities(),
 })
 
@@ -318,7 +384,7 @@ lspconfig.typst_lsp.setup({
   on_attach = on_attach,
   capabilities = capabilities(),
   root_dir = function(fname)
-    return lsp_util.root_pattern '.git'(fname) or lsp_util.path.dirname(fname)
+    return lsp_util.root_pattern '.git' (fname) or lsp_util.path.dirname(fname)
   end
 })
 
@@ -347,7 +413,7 @@ lspconfig.terraformls.setup({
 --  }
 --}
 lspconfig.dartls.setup({
-  on_attach = on_attach, 
-  capabilities = capabilities(), 
+  on_attach = on_attach,
+  capabilities = capabilities(),
   cmd = { 'dart', 'language-server', '--protocol=lsp' }
 })

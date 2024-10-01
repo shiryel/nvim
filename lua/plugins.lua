@@ -20,40 +20,73 @@
 -- Needs to be called right after telesctope to get fzf loaded
 --require('telescope').load_extension('fzf')
 
+local fn = vim.fn
+local api = vim.api
+local cmd = vim.cmd
+
+require('kanagawa').setup({
+  undercurl = false,
+  colors = {
+    theme = { all = { diag = { error = "#727169" } } }, -- fujiGray
+  }
+})
+
+cmd("colorscheme kanagawa-wave")
+
+require('mini.statusline').setup({})
+-- https://github.com/rebelot/kanagawa.nvim?tab=readme-ov-file#color-palette
+api.nvim_set_hl(0, "MiniIndentscopeSymbol", { fg = "#363646" })
+
+require('mini.indentscope').setup({
+  draw = {
+    animation = function(_, _) return 10 end -- ms between each step
+  }
+})
+
+-- see: https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md#loaders
+-- Using an empty {} will use runtimepath, check it with: :lua =vim.opt.runtimepath._value
+-- Check logs with: :lua require("luasnip").log.open()
+require("luasnip.loaders.from_vscode").lazy_load({ paths = { "/etc/nvim/snippets" } })
+--require("luasnip").config.setup({
+--  enable_autosnippets = true
+--})
+
 -- Icons for CMP
 local kind_icons = {
   Text = "",
-  Method = "",
-  Function = "",
+  Function = "󰊕",
+  Method = "󰡱",
   Constructor = "",
-  Field = "",
-  Variable = "",
-  Class = "ﴯ",
+  Field = "",
+  Variable = "",
+  Class = "",
   Interface = "",
   Module = "",
-  Property = "ﰠ",
+  Property = "",
   Unit = "",
-  Value = "",
+  Value = "󰀬",
   Enum = "",
-  Keyword = "",
-  Snippet = "",
-  Color = "",
-  File = "",
-  Reference = "",
-  Folder = "",
   EnumMember = "",
-  Constant = "",
+  Keyword = "",
+  Snippet = "",
+  Color = "",
+  File = "",
+  Reference = "",
+  Folder = "",
+  Constant = "",
   Struct = "",
   Event = "",
-  Operator = "",
-  TypeParameter = ""
+  Operator = "",
+  TypeParameter = ""
 }
 
+local luasnip = require("luasnip")
 local cmp = require("cmp")
 cmp.setup({
   snippet = {
     expand = function(args)
-      vim.fn["vsnip#anonymous"](args.body)
+      -- NOTE: Nvim has native snippets, but they are minimal, made to only support the LSP snippets
+      require('luasnip').lsp_expand(args.body)
     end
   },
   window = {
@@ -64,27 +97,53 @@ cmp.setup({
     entries = "custom" -- can be "custom", "wildmenu" or "native"
   },
   mapping = cmp.mapping.preset.insert({
+    ["<Tab>"] = cmp.mapping(function(fallback)
+      if luasnip.locally_jumpable(1) then
+        luasnip.jump(1)
+      elseif cmp.visible() then
+        cmp.select_next_item()
+      else
+        fallback()
+      end
+    end, { "i", "s" }),
+    ["<S-Tab>"] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_prev_item()
+      elseif luasnip.locally_jumpable(-1) then
+        luasnip.jump(-1)
+      else
+        fallback()
+      end
+    end, { "i", "s" }),
+    ["<CR>"] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        if luasnip.expandable() then
+          luasnip.expand()
+        else
+          cmp.confirm({ select = true })
+        end
+      else
+        fallback()
+      end
+    end),
     ['<C-up>'] = cmp.mapping.scroll_docs(-4),
     ['<C-down>'] = cmp.mapping.scroll_docs(4),
     ["<C-tab>"] = cmp.mapping.complete(),
-    ["<CR>"] = cmp.mapping.confirm({ select = true })
     -- ['<C-c>'] = cmp.mapping.abort(),
   }),
   sources = cmp.config.sources({
       { name = 'nvim_lsp_signature_help' },
       { name = "nvim_lsp" },
+      { name = "luasnip" }, --, option = { show_autosnippets = true }
       { name = 'buffer' },
       { name = 'path' },
       --{ name = 'omni' },
-      { name = "vsnip" },
       { name = 'nvim_lua' }
     },
     { { name = "buffer" } }
   ),
   formatting = {
     format = function(entry, vim_item)
-      -- Kind icons
-      vim_item.kind = string.format('%s %s', kind_icons[vim_item.kind], vim_item.kind)
       -- Source
       vim_item.menu = ({
         buffer = "[Buffer]",
@@ -93,6 +152,22 @@ cmp.setup({
         nvim_lua = "[Lua]",
         latex_symbols = "[LaTeX]",
       })[entry.source.name]
+
+      if vim_item.kind == 'Color' and entry.completion_item.documentation then
+        local hex = string.sub(entry.completion_item.documentation, 2)
+        if hex then
+          local group = 'Tw_' .. hex
+          if fn.hlID(group) < 1 then
+            api.nvim_set_hl(0, group, { fg = '#' .. hex })
+          end
+          vim_item.kind = "■ Color" -- or "⬤" or anything
+          vim_item.kind_hl_group = group
+        end
+      else
+        -- Kind icons
+        vim_item.kind = string.format('%s %s', kind_icons[vim_item.kind], vim_item.kind)
+      end
+
       return vim_item
     end
   }
@@ -113,7 +188,7 @@ require("nvim-treesitter.configs").setup({
     -- some files are too big for treesitter to work...
     disable = function(lang, bufnr)
       -- ignore if > 1mb (size in bytes)
-      return (vim.fn.getfsize(bufnr) > 1000000) or false
+      return (fn.getfsize(bufnr) > 1000000) or false
     end
   },
   textobjects = {
@@ -207,46 +282,6 @@ require("nvim-tree").setup({
   }
 })
 
---require("oil").setup({
---  -- Keymaps in oil buffer. Can be any value that `vim.keymap.set` accepts OR a table of keymap
---  -- options with a `callback` (e.g. { callback = function() ... end, desc = "", mode = "n" })
---  -- Additionally, if it is a string that matches "actions.<name>",
---  -- it will use the mapping at require("oil.actions").<name>
---  -- Set to `false` to remove a keymap
---  -- See :help oil-actions for a list of all available actions
---  keymaps = {
---    ["g?"] = "actions.show_help",
---    ["<CR>"] = "actions.select",
---    ["<C-s>"] = "actions.select_vsplit",
---    ["<C-h>"] = "actions.select_split",
---    ["<C-t>"] = "actions.select_tab",
---    ["<C-p>"] = "actions.preview",
---    ["<C-c>"] = "actions.close",
---    ["<C-l>"] = "actions.refresh",
---    ["<C-up>"] = "actions.parent",
---    ["_"] = "actions.open_cwd",
---    ["`"] = "actions.cd",
---    ["~"] = "actions.tcd",
---    ["gs"] = "actions.change_sort",
---    ["gx"] = "actions.open_external",
---    ["g."] = "actions.toggle_hidden",
---    ["g\\"] = "actions.toggle_trash",
---  },
---  -- EXPERIMENTAL support fja or performing file operations with git
---  git = {
---    -- Return true to automatically git add/mv/rm files
---    add = function(path)
---      return true
---    end,
---    mv = function(src_path, dest_path)
---      return true
---    end,
---    --rm = function(path)
---    --  return true
---    --end,
---  },
---})
-
 require("gitsigns").setup({
   numhl = true,
   signcolumn = false,
@@ -276,22 +311,7 @@ require("which-key").setup({
       suggestions = 20
     }
   },
-  ignore_missings = false,
-  triggers_blacklist = { i = { "j", "k" }, v = { "j", "k" } },
-  triggers_nowait = {
-    -- leader
-    "<leader>",
-    -- marks
-    "`",
-    "'",
-    "g`",
-    "g'",
-    -- registers
-    '"',
-    "<c-r>",
-    -- spelling
-    "z=",
-  }
+  ignore_missings = false
 })
 
 require("ccc").setup({

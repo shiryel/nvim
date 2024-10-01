@@ -16,8 +16,8 @@ c("hi Comment cterm=italic")
 c("hi Type cterm=italic")
 
 -- Transparent Background
-c("highlight Normal guibg=none")
-c("highlight NonText guibg=none")
+--c("highlight Normal guibg=none")
+--c("highlight NonText guibg=none")
 
 if g.neovide then
   g.neovide_hide_mouse_when_typing = 1
@@ -121,6 +121,10 @@ local function vnoremap(bind, command, desc)
   return vim.keymap.set("v", bind, command, { noremap = true, silent = true, desc = desc })
 end
 
+local function tnoremap(bind, command, desc)
+  return vim.keymap.set("t", bind, command, { noremap = true, silent = true, desc = desc })
+end
+
 -- Folding
 -- (we use aerial to navigate and fold to handle HTML)
 o.foldmethod = "expr"
@@ -166,6 +170,8 @@ nnoremap("<leader><tab>", ":retab<cr>", "tabs to spaces")
 -- Open terminal
 --nnoremap("<leader>T", ":sp <Bar> :terminal<cr> <bar> i", "open terminal")
 nnoremap("<leader>T", ":botright terminal<cr> <bar> i", "open terminal")
+tnoremap("<Esc>", "<C-\\><C-n>", "normal mode")
+tnoremap("<C-up>", "<C-\\><C-n><c-w><c-k>", "navigate up")
 
 -- Aerial --
 nnoremap("<leader>a", "<cmd>AerialToggle!<cr>", "toggle aerial")
@@ -173,9 +179,6 @@ nnoremap("<leader>a", "<cmd>AerialToggle!<cr>", "toggle aerial")
 -- Nvim Tree --
 nnoremap("<leader>e", ":NvimTreeFindFile<cr>", "open file tree")
 nnoremap("<leader>E", ":NvimTreeToggle<cr>", "toggle file tree")
--- Oil --
---local oil = require("oil")
---nnoremap("<leader>e", oil.open, "open parent directory")
 
 -- Fzf-lua --
 local fzf = require('fzf-lua')

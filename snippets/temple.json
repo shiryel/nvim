@@ -1,0 +1,382 @@
+{
+  "hyperlink | anchor": {
+    "prefix": "a",
+    "body": "a class: \"${1}\" do"
+  },
+  "emphasized text": {
+    "prefix": "em",
+    "body": "em class: \"${1}\" do"
+  },
+  "computer code text": {
+    "prefix": "code",
+    "body": "code class: \"${1}\" do"
+  },
+  "sample computer code": {
+    "prefix": "samp",
+    "body": "samp class: \"${1}\" do"
+  },
+  "keyboard text": {
+    "prefix": "kbd",
+    "body": "kbd class: \"${1}\" do"
+  },
+  "variable": {
+    "prefix": "var",
+    "body": "var class: \"${1}\" do"
+  },
+  "citation": {
+    "prefix": "cite",
+    "body": "cite class: \"${1}\" do"
+  },
+  "abbreviated form": {
+    "prefix": "abbr",
+    "body": "abbr title: \"${1:et cetera}\" do"
+  },
+  "italic": {
+    "prefix": "i",
+    "body": "i class: \"${1}\" do"
+  },
+  "bold": {
+    "prefix": "b",
+    "body": "b class: \"${1}\" do"
+  },
+  "short quotation": {
+    "prefix": "q",
+    "body": "q class: \"${1}\" do"
+  },
+  "subscript text": {
+    "prefix": "sub",
+    "body": "sub class: \"${1}\" do"
+  },
+  "superscript text": {
+    "prefix": "sup",
+    "body": "sup class: \"${1}\" do"
+  },
+  "deleted text": {
+    "prefix": "del",
+    "body": "del datetime: \"${1}\" do"
+  },
+  "inserted text": {
+    "prefix": "ins",
+    "body": "ins datetime: \"${1}\" do"
+  },
+  "Bidirectional Text Isolate": {
+    "prefix": "bdi",
+    "body": "bdi class: \"${1}\" do"
+  },
+  "Bidirectional Text Override": {
+    "prefix": "bdo",
+    "body": "bdo class: \"${1}\" do"
+  },
+  "strikethrough text": {
+    "prefix": "s",
+    "body": "s class: \"${1}\" do"
+  },
+  "definition term": {
+    "prefix": "dfn",
+    "body": "dfn class: \"${1}\" do"
+  },
+  "important text": {
+    "prefix": "strong",
+    "body": "strong class: \"${1}\" do"
+  },
+  "small print | copyright": {
+    "prefix": "small",
+    "body": "small class: \"${1}\" do"
+  },
+  "head": {
+    "prefix": "head",
+    "body": "head class: \"${1}\" do"
+  },
+  "title": {
+    "prefix": "title",
+    "body": "title class: \"${1}\" do"
+  },
+  "style": {
+    "prefix": "style",
+    "body": "style class: \"${1}\" do"
+  },
+  "script": {
+    "prefix": "script",
+    "body": "script class: \"${1}\" do"
+  },
+  "script fallback text": {
+    "prefix": "noscript",
+    "body": "noscript class: \"${1}\" do"
+  },
+  "template": {
+    "prefix": "template",
+    "body": "template class: \"${1}\" do"
+  },
+  "body": {
+    "prefix": "body",
+    "body": "body class: \"${1}\" do"
+  },
+  "section": {
+    "prefix": "section",
+    "body": "section class: \"${1}\" do"
+  },
+  "navigation section": {
+    "prefix": "nav",
+    "body": "nav class: \"${1}\" do"
+  },
+  "article": {
+    "prefix": "article",
+    "body": "article class: \"${1}\" do"
+  },
+  "aside": {
+    "prefix": "aside",
+    "body": "aside class: \"${1}\" do"
+  },
+  "h1": {
+    "prefix": "h1",
+    "body": "h1 class: \"${1}\" do"
+  },
+  "h2": {
+    "prefix": "h2",
+    "body": "h2 class: \"${1}\" do"
+  },
+  "h3": {
+    "prefix": "h3",
+    "body": "h3 class: \"${1}\" do"
+  },
+  "h4": {
+    "prefix": "h4",
+    "body": "h4 class: \"${1}\" do"
+  },
+  "h5": {
+    "prefix": "h5",
+    "body": "h5 class: \"${1}\" do"
+  },
+  "h6": {
+    "prefix": "h6",
+    "body": "h6 class: \"${1}\" do"
+  },
+  "header": {
+    "prefix": "header",
+    "body": "header class: \"${1}\" do"
+  },
+  "footer": {
+    "prefix": "footer",
+    "body": "footer class: \"${1}\" do"
+  },
+  "address": {
+    "prefix": "address",
+    "body": "address class: \"${1}\" do"
+  },
+  "main": {
+    "prefix": "main",
+    "body": "main class: \"${1}\" do"
+  },
+  "paragraph": {
+    "prefix": "p",
+    "body": "p class: \"${1}\" do"
+  },
+  "preformatted text": {
+    "prefix": "pre",
+    "body": "pre class: \"${1}\" do"
+  },
+  "blockquote": {
+    "prefix": "blockquote",
+    "body": "blockquote class: \"${1}\" do"
+  },
+  "figure": {
+    "prefix": "figure",
+    "body": "figure class: \"${1}\" do"
+  },
+  "figcaption": {
+    "prefix": "figcaption",
+    "body": "figcaption class: \"${1}\" do"
+  },
+  "div": {
+    "prefix": "div",
+    "body": "div class: \"${1}\" do"
+  },
+  "data": {
+    "prefix": "data",
+    "body": "data class: \"${1}\" do"
+  },
+  "time": {
+    "prefix": "time",
+    "body": "time class: \"${1}\" do"
+  },
+  "underlined text": {
+    "prefix": "u",
+    "body": "u class: \"${1}\" do"
+  },
+  "mark": {
+    "prefix": "mark",
+    "body": "mark class: \"${1}\" do"
+  },
+  "span": {
+    "prefix": "span",
+    "body": "span class: \"${1}\" do"
+  },
+  "iframe": {
+    "prefix": "iframe",
+    "body": "iframe class: \"${1}\" do"
+  },
+  "object": {
+    "prefix": "object",
+    "body": "object class: \"${1}\" do"
+  },
+  "video": {
+    "prefix": "video",
+    "body": "video class: \"${1}\" do"
+  },
+  "audio": {
+    "prefix": "audio",
+    "body": "audio class: \"${1}\" do"
+  },
+  "canvas": {
+    "prefix": "canvas",
+    "body": "canvas class: \"${1}\" do"
+  },
+  "map": {
+    "prefix": "map",
+    "body": "map class: \"${1}\" do"
+  },
+  "table": {
+    "prefix": "table",
+    "body": "table class: \"${1}\" do"
+  },
+  "caption": {
+    "prefix": "caption",
+    "body": "caption class: \"${1}\" do"
+  },
+  "colgroup": {
+    "prefix": "colgroup",
+    "body": "colgroup class: \"${1}\" do"
+  },
+  "form": {
+    "prefix": "form",
+    "body": "form class: \"${1}\" do"
+  },
+  "fieldset": {
+    "prefix": "fieldset",
+    "body": "fieldset class: \"${1}\" do"
+  },
+  "legend": {
+    "prefix": "legend",
+    "body": "legend class: \"${1}\" do"
+  },
+  "label": {
+    "prefix": "label",
+    "body": "label class: \"${1}\" do"
+  },
+  "button": {
+    "prefix": "button",
+    "body": "button class: \"${1}\" do"
+  },
+  "select": {
+    "prefix": "select",
+    "body": "select class: \"${1}\" do"
+  },
+  "datalist": {
+    "prefix": "datalist",
+    "body": "datalist class: \"${1}\" do"
+  },
+  "optgroup": {
+    "prefix": "optgroup",
+    "body": "optgroup class: \"${1}\" do"
+  },
+  "option": {
+    "prefix": "option",
+    "body": "option class: \"${1}\" do"
+  },
+  "textarea": {
+    "prefix": "textarea",
+    "body": "textarea class: \"${1}\" do"
+  },
+  "output": {
+    "prefix": "output",
+    "body": "output class: \"${1}\" do"
+  },
+  "progress": {
+    "prefix": "progress",
+    "body": "progress class: \"${1}\" do"
+  },
+  "meter": {
+    "prefix": "meter",
+    "body": "meter class: \"${1}\" do"
+  },
+  "details": {
+    "prefix": "details",
+    "body": "details class: \"${1}\" do"
+  },
+  "summary": {
+    "prefix": "summary",
+    "body": "summary class: \"${1}\" do"
+  },
+  "menuitem": {
+    "prefix": "menuitem",
+    "body": "menuitem class: \"${1}\" do"
+  },
+  "menu": {
+    "prefix": "menu",
+    "body": "menu class: \"${1}\" do"
+  },
+  "html": {
+    "prefix": "html",
+    "body": "html class: \"${1}\" do"
+  },
+  "ordered list": {
+    "prefix": "ol",
+    "body": "ol class: \"${1}\" do"
+  },
+  "unordered list": {
+    "prefix": "ul",
+    "body": "ul class: \"${1}\" do"
+  },
+  "list item": {
+    "prefix": "li",
+    "body": "li class: \"${1}\" do"
+  },
+  "description list": {
+    "prefix": "dl",
+    "body": "dl class: \"${1}\" do"
+  },
+  "description list term": {
+    "prefix": "dt",
+    "body": "dt class: \"${1}\" do"
+  },
+  "description list details": {
+    "prefix": "dd",
+    "body": "dd class: \"${1}\" do"
+  },
+  "table body": {
+    "prefix": "tbody",
+    "body": "tbody class: \"${1}\" do"
+  },
+  "table header": {
+    "prefix": "thead",
+    "body": "thead class: \"${1}\" do"
+  },
+  "table footer": {
+    "prefix": "tfoot",
+    "body": "tfoot class: \"${1}\" do"
+  },
+  "table row": {
+    "prefix": "tr",
+    "body": "tr class: \"${1}\" do"
+  },
+  "table cell": {
+    "prefix": "td",
+    "body": "td class: \"${1}\" do"
+  },
+  "table header cell": {
+    "prefix": "th",
+    "body": "th class: \"${1}\" do"
+  },
+  "ruby": {
+    "prefix": "ruby",
+    "body": "ruby class: \"${1}\" do"
+  },
+  "ruby text component": {
+    "prefix": "rt",
+    "body": "rt class: \"${1}\" do"
+  },
+  "fallback for ruby annotations": {
+    "prefix": "rp",
+    "body": "rp class: \"${1}\" do"
+  }
+}

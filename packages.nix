@@ -9,6 +9,13 @@
     VISUAL = "vim";
   };
 
+  # Snippets based on: https://github.com/rafamadriz/friendly-snippets
+  environment.etc."nvim/snippets/elixir.json".source = ./snippets/elixir.json;
+  environment.etc."nvim/snippets/eelixir.json".source = ./snippets/eelixir.json;
+  environment.etc."nvim/snippets/tailwind.json".source = ./snippets/tailwind.json;
+  environment.etc."nvim/snippets/temple.json".source = ./snippets/temple.json;
+  environment.etc."nvim/snippets/package.json".source = ./snippets/package.json;
+
   environment.systemPackages = with pkgs; [
     # Syntax Highlight
     tree-sitter
@@ -25,6 +32,7 @@
     # Language servers
     efm-langserver # General Purpose LSP
     elixir-ls # Elixir
+    tailwindcss-language-server # TailwindCSS
     #nixd # Nix
     nil # Nix
     #ccls # GCC

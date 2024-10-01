@@ -58,9 +58,13 @@ in
           cmp-nvim-lua # lua completion
           cmp-buffer
           cmp-path
-          vim-vsnip # required by cmp
+          cmp_luasnip
           #cmp-omni
           cmp-cmdline
+          #
+          # SNIPPET
+          #
+          luasnip
           #
           # SYNTAX HIGHLIGHT
           #
@@ -79,6 +83,7 @@ in
             tree-sitter-c
             tree-sitter-cpp
             tree-sitter-llvm
+            tree-sitter-c-sharp
             tree-sitter-clojure
             tree-sitter-commonlisp
             tree-sitter-hcl # terraform / tofu
@@ -111,7 +116,6 @@ in
             tree-sitter-graphql
           ]))
           #kotlin-vim
-          typst-vim
           #nvim-treesitter-textobjects
           #
           # GIT
@@ -121,7 +125,6 @@ in
           #
           # NAVIGATION
           #
-          #oil-nvim # TODO: wait for https://github.com/stevearc/oil.nvim/issues/117
           nvim-tree-lua
           nvim-web-devicons
           fzf-lua
@@ -132,6 +135,7 @@ in
           #
           # EXTRA
           #
+          mini-nvim
           which-key-nvim
           ccc-nvim
         ];

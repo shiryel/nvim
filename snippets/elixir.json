@@ -2,6 +2,7 @@
   "genserver basic structure": {
     "prefix": "gen",
     "body": [
+      "# Docs: https://hexdocs.pm/elixir/GenServer.html",
       "use GenServer",
       "",
       "@doc false",
@@ -13,6 +14,114 @@
       "def init(state) do",
       "  {:ok, state}",
       "end"
+    ]
+  },
+  "liveview basic structure": {
+    "prefix": "live",
+    "body": [
+      "# Components: https://hexdocs.pm/phoenix_live_view/Phoenix.Component.html#components",
+      "defmodule CoreWeb.${1}Live.${2:Index} do",
+      "  use CoreWeb, :live_view",
+      "",
+      "  $0",
+      "",
+      "  import Temple",
+      "  import Phoenix.LiveView.TagEngine, only: [component: 3, inner_block: 2]",
+      "",
+      "  @impl true",
+      "  def mount(_params, _session, socket) do",
+      "    #socket =",
+      "    #  socket",
+      "    #  |> assign(:uploaded_files, [])",
+      "    #  |> allow_upload(:avatar, accept: ~w(.jpg .jpeg), max_entries: 5)",
+      "",
+      "    {:ok, stream(socket, :displays, Showcases.list_displays())}",
+      "  end",
+      "",
+      "  @impl true",
+      "  def render(%{live_action: _index} = assigns) do",
+      "    temple do",
+      "    end",
+      "  end",
+      "",
+      "  @impl true",
+      "  def handle_params(params, _url, socket) do",
+      "    {:noreply, apply_action(params, socket.assigns.live_action, socket)}",
+      "  end",
+      "",
+      "  defp apply_action(params, :index, socket) do",
+      "    socket",
+      "    |> assign(:page_title, \"Listing Displays\")",
+      "  end",
+      "",
+      "  #@impl true",
+      "  #def handle_info({_module, {:saved, form}}, socket) do",
+      "  #  {:noreply, stream_insert(socket, :infos, form)}",
+      "  #end",
+      "",
+      "  #@impl true",
+      "  #def handle_event(\"delete\", %{\"id\" => id}, socket) do",
+      "  #  {:noreply, stream_delete(socket, :infos, info)}",
+      "  #end",
+      "end"
+    ]
+  },
+  "phoenix controller basic structure": {
+    "prefix": "controller",
+    "body": [
+      "defmodule CoreWeb.PageController do",
+      "  use CoreWeb, :controller",
+      "",
+      "  def home(conn, _params) do",
+      "    # skip the default app layout",
+      "    render(conn, :home, layout: false)",
+      "  end",
+      "end"
+    ]
+  },
+  "ecto table basic structure": {
+    "prefix": "ecto_struct",
+    "body": [
+      "# Types: https://hexdocs.pm/ecto/Ecto.Schema.html#module-primitive-types",
+      "defmodule Core.${1:Context}.${2:Table} do",
+      "  use Ecto.Schema",
+      "  import Ecto.Changeset",
+      "",
+      "  @primary_key {:id, :binary_id, autogenerate: true}",
+      "  @foreign_key_type :binary_id",
+      "  schema \"${3:table}\" do",
+      "    field :description, :string",
+      "    field :name, :string",
+      "    field :owner_id, :binary_id",
+      "",
+      "    timestamps(type: :utc_datetime)",
+      "  end",
+      "",
+      "  @doc false",
+      "  def changeset(display, attrs) do",
+      "    display",
+      "    |> cast(attrs, [:name, :description])",
+      "    |> validate_required([:name, :description])",
+      "  end",
+      "end"
+    ]
+  },
+  "ecto table basic structure": {
+    "prefix": "ecto_migration",
+    "body": [
+      "# Types: https://hexdocs.pm/ecto/Ecto.Schema.html#module-primitive-types",
+      "create table(:${1:users}, primary_key: false) do",
+      "  add :id, :binary_id, primary_key: true",
+      "  add :user_id, references(:users, type: :binary_id, on_delete: :delete_all), null: false",
+      "  add :token, :binary, null: false",
+      "  add :sent_to, :string",
+      "",
+      "  timestamps(type: :utc_datetime, updated_at: false)",
+      "end",
+      "",
+      "create index(:${1:users}, [:user_id])",
+      "create unique_index(:${1:users}, [:context, :token])",
+      ""
     ]
   }
 }

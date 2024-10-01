@@ -121,14 +121,14 @@ dap.configurations.cpp = {
 
 dap.adapters.rust_gdb = {
   type = "executable",
-  name = "gdb";
+  name = "gdb",
   command = "rust-gdb",
   args = { "-i", "dap" },
 }
 
 dap.adapters.lldb = {
   type = "executable",
-  name = "lldb";
+  name = "lldb",
   command = "lldb-vscode",
 }
 

@@ -1,0 +1,14 @@
+{
+  "flex center": {
+    "prefix": "flex_center",
+    "body": [
+      "flex items-center gap-4$0"
+    ]
+  },
+  "flex center between": {
+    "prefix": "flex_center_between",
+    "body": [
+      "flex items-center justify-between gap-4$0"
+    ]
+  }
+}
