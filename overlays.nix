@@ -12,6 +12,9 @@ let
   };
 in
 {
+  # Fixes Neovide recompiling every update
+  neovide = (prev.neovide.override { neovim = prev.neovim; });
+
   neovim = (prev.neovim.override {
     configure = {
       # will be passed to the -u option of nvim
@@ -73,6 +76,7 @@ in
           (nvim-treesitter.withPlugins (plugins: with plugins; [
             # common
             tree-sitter-markdown
+            tree-sitter-markdown-inline
             tree-sitter-comment
             # languages
             tree-sitter-elixir
@@ -128,6 +132,7 @@ in
           nvim-tree-lua
           nvim-web-devicons
           fzf-lua
+          harpoon2
           #plenary-nvim
           #telescope-nvim
           #telescope-fzf-native-nvim

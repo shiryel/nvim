@@ -21,6 +21,7 @@ c("hi Type cterm=italic")
 
 if g.neovide then
   g.neovide_hide_mouse_when_typing = 1
+  g.neovide_input_use_logo = 1 -- see: https://github.com/neovide/neovide/pull/857
 end
 
 o.guifont = { "Cousine Nerd Font Mono", ":h11" }
@@ -41,6 +42,7 @@ o.number = true
 o.relativenumber = true -- line number is relative to cursor
 o.mouse = "a"           -- enable mouse
 o.cursorline = true     -- highlight the current cursor line
+o.cursorcolumn = false  -- highlight the current cursor column
 o.smartindent = true    -- smart ident (priority for C like langs)
 o.autoindent = true     -- copy the ident of current line when using the o or O commands
 o.wrap = true           -- continue long lines in the next line
@@ -114,7 +116,7 @@ local function inoremap(bind, command, desc)
 end
 
 local function cnoremap(bind, command, desc)
-  return vim.keymap.set("c", bind, command, { noremap = true, expr = true, desc = desc })
+  return vim.keymap.set("c", bind, command, { noremap = true, silent = true, expr = true, desc = desc })
 end
 
 local function vnoremap(bind, command, desc)
@@ -157,9 +159,34 @@ nnoremap("<c-right>", "<c-w><c-l>")
 nnoremap("<leader>be", ":bp<cr>", "previous buffer")
 nnoremap("<leader>bo", ":bn<cr>", "next buffer")
 
+-- Harpoon2
+local harpoon = require("harpoon")
+nnoremap("<C-a>", function() harpoon:list():add() end, "add to list")
+nnoremap("<C-s>", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, "toggle list")
+nnoremap("<C-1>", function() harpoon:list():select(1) end, "select 1 from list")
+nnoremap("<C-2>", function() harpoon:list():select(2) end, "select 2 from list")
+nnoremap("<C-3>", function() harpoon:list():select(3) end, "select 3 from list")
+nnoremap("<C-4>", function() harpoon:list():select(4) end, "select 4 from list")
+nnoremap("<C-q>", function() harpoon:list():prev() end, "toggle to previous buffer on list")
+nnoremap("<C-d>", function() harpoon:list():next() end, "toggle to next buffer on list")
+
 -- Clipboard
+
+-- see: https://github.com/ibhagwan/fzf-lua/issues/808#issuecomment-1620955734
+vim.keymap.set('t', '<c-r>', [['<C-\><C-N>"'.nr2char(getchar()).'pi']], { expr = true, desc = "registers" })
+
 noremap("<leader>y", "\"+y", "system copy")
 noremap("<leader>p", "\"+p", "system paste")
+
+if g.neovide then
+  -- see: https://github.com/neovide/neovide/issues/113#issuecomment-2106304788
+  vim.keymap.set('v', '<sc-c>', '"+y', { noremap = true, desc = "system copy" })
+  vim.keymap.set('n', '<sc-v>', 'l"+P', { noremap = true, desc = "system paste" })
+  vim.keymap.set('v', '<sc-v>', '"+P', { noremap = true, desc = "system paste" })
+  vim.keymap.set('c', '<sc-v>', '<C-o>l<C-o>"+<C-o>P<C-o>l', { noremap = true, desc = "system paste" })
+  vim.keymap.set('i', '<sc-v>', '<ESC>l"+Pli', { noremap = true, desc = "system paste" })
+  vim.keymap.set('t', '<sc-v>', '<C-\\><C-n>"+Pi', { noremap = true, desc = "system paste" })
+end
 
 -- Unselect
 nnoremap("<leader>/", ":noh<cr>", "unselect")
@@ -238,3 +265,6 @@ c("au FileType elm set expandtab")
 c("au FileType elm set tabstop=2")
 c("au FileType elm set shiftwidth=2")
 c("au FileType gdscript set noexpandtab")
+
+c("au BufNewFile,BufRead *.yrl set filetype=erlang")
+c("au BufNewFile,BufRead *.xrl set filetype=erlang")

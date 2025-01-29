@@ -1,7 +1,4 @@
 -- https://learn.microsoft.com/en-us/dotnet/api/microsoft.visualstudio.languageserver.protocol.servercapabilities
---
--- TODO:
--- maybe use `:h vim.lsp.buf` functions
 
 -- NOTE: some LSPs (like csharp-ls) say that they don't have some capabilities, but they do
 -- so we don't check the following capabilities: documentFormattingProvider, hoverProvider
@@ -15,10 +12,14 @@ local function on_attach(client, bufnr)
     return vim.keymap.set("n", bind, command, { buffer = bufnr, silent = true, noremap = true, desc = desc })
   end
 
+  local function voremap(bind, command, desc)
+    return vim.keymap.set("v", bind, command, { buffer = bufnr, silent = true, noremap = true, desc = desc })
+  end
+
   -- COMPLETION --
 
   -- Enable completion triggered by <c-x><c-o>
-  vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
+  vim.api.nvim_set_option_value("omnifunc", "v:lua.vim.lsp.omnifunc", { buf = bufnr })
 
   -- DIAGNOSTICS --
 
@@ -40,10 +41,7 @@ local function on_attach(client, bufnr)
 
   -- Formats the current buffer
   noremap("<leader>f", b.format, "format")
-  -- Formats a given range
-  if cap.documentRangeFormattingProvider then
-    noremap("<leader>F", b.range_formatting, "format range")
-  end
+  voremap("<leader>f", b.format, "format") -- range format is configured automatically when bound to visual mode
 
   -- LOCATIONS --
 
@@ -51,19 +49,15 @@ local function on_attach(client, bufnr)
   noremap("ga", fzf.lsp_finder, "All LSP locations, combined view")
 
   -- Lists all the references to the symbol under the cursor in the quickfix window
-  --if cap.referenceProvider then
-  --  noremap("<leader>r", tb.lsp_references, "list references to symbol")
-  --end
+  if cap.referencesProvider then
+    noremap("<leader>r", b.references, "list references to symbol")
+  end
 
   -- Lists all the implementations for the symbol under the cursor in the
   -- quickfix window
-  --if cap.implementationProvider then
-  --  noremap("<leader>i", tb.lsp_implementations, "list symbol's implementations")
-  --end
-
-  --if cap.typeDefinitionProvider then
-  --  noremap("<leader>t", fzf.lsp_type_definitions, "go to type definition")
-  --end
+  if cap.implementationProvider then
+    noremap("<leader>i", b.implementation, "list symbol's implementations")
+  end
 
   -- GOTO --
 
@@ -81,6 +75,10 @@ local function on_attach(client, bufnr)
       noremap("gd", b.declaration, "go to declaration")
       noremap("gD", b.declaration, "go to declaration")
     end
+  end
+
+  if cap.typeDefinitionProvider then
+    noremap("gr", b.type_definition, "go to type definition")
   end
 
   -- HELPERS --
@@ -170,15 +168,22 @@ lspconfig.elixirls.setup({
   cmd = { "elixir-ls" },
   root_dir = function(fname)
     -- find mix.exs before git, as sometimes we have a project on a subdirectory
-    return lsp_util.root_pattern 'mix.exs' (fname) or lsp_util.find_git_ancestor(fname) or vim.loop.os_homedir()
+    return lsp_util.root_pattern 'mix.exs' (fname) or lsp_util.find_git_ancestor(fname) or vim.uv.os_homedir()
   end,
 })
 
 -- TAILWIND
+
+-- :luado inspect(require("lspconfig").tailwindcss.config_def.default_config.filetypes)
+local tailwind_filetypes = lspconfig.tailwindcss.config_def.default_config.filetypes
+local extra_filetypes = { "rust" }
+table.move(extra_filetypes, 1, #extra_filetypes, #tailwind_filetypes + 1, tailwind_filetypes)
+
 lspconfig.tailwindcss.setup({
   on_attach = on_attach,
   capabilities = capabilities(),
   cmd = { 'tailwindcss-language-server', '--stdio' },
+  filetypes = tailwind_filetypes,
   settings = {
     tailwindCSS = {
       colorDecorators = false, -- kinda buggy
@@ -186,6 +191,7 @@ lspconfig.tailwindcss.setup({
         elixir = "html-eex",
         eelixir = "html-eex",
         heex = "html-eex",
+        rust = "html", -- for Dioxus
       },
       experimental = {
         classRegex = {
@@ -206,7 +212,7 @@ lspconfig.tailwindcss.setup({
           ".git"
         )(fname) or
         lsp_util.find_git_ancestor(fname) or
-        vim.loop.os_homedir()
+        vim.uv.os_homedir()
   end
 })
 
@@ -241,7 +247,26 @@ lspconfig.efm.setup({
 lspconfig.lua_ls.setup({
   on_attach = on_attach,
   capabilities = capabilities(),
-  cmd = { "lua-language-server" }
+  cmd = { "lua-language-server" },
+  settings = {
+    Lua = {
+      runtime = {
+        version = "LuaJIT",
+      },
+      diagnostics = {
+        globals = { "vim" }
+      },
+      workspace = {
+        checkThirdParty = false,
+        library = {
+          vim.env.VIMRUNTIME
+        }
+      },
+      telemetry = {
+        enable = false
+      }
+    }
+  }
 })
 
 -- ZIG
@@ -380,7 +405,7 @@ lspconfig.svelte.setup({
 })
 
 -- TYPST
-lspconfig.typst_lsp.setup({
+lspconfig.tinymist.setup({
   on_attach = on_attach,
   capabilities = capabilities(),
   root_dir = function(fname)

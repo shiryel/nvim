@@ -151,6 +151,10 @@
     "prefix": "h6",
     "body": "h6 class: \"${1}\" do"
   },
+  "heading element | groups <h1>-<h6> with <p>": {
+    "prefix": "hgroup",
+    "body": "hgroup class: \"${1}\" do"
+  },
   "header": {
     "prefix": "header",
     "body": "header class: \"${1}\" do"
@@ -190,6 +194,10 @@
   "div": {
     "prefix": "div",
     "body": "div class: \"${1}\" do"
+  },
+  "dialog | for modals, alerts or subwindows": {
+    "prefix": "dialog",
+    "body": "dialog class: \"${1}\" do"
   },
   "data": {
     "prefix": "data",
@@ -238,6 +246,10 @@
   "table": {
     "prefix": "table",
     "body": "table class: \"${1}\" do"
+  },
+  "table column": {
+    "prefix": "col",
+    "body": "col class: \"${1}\" do"
   },
   "caption": {
     "prefix": "caption",
@@ -378,5 +390,169 @@
   "fallback for ruby annotations": {
     "prefix": "rp",
     "body": "rp class: \"${1}\" do"
+  },
+  "metadata": {
+    "prefix": "meta",
+    "body": "meta ${1:\"charset: \"utf-8\"\"} do"
+  },
+  "external resource link": {
+    "prefix": "link",
+    "body": "link class: \"${1}\" do"
+  },
+  "specifies the base URL to use for all relative URLs": {
+    "prefix": "base",
+    "body": "base class: \"${1}\" do"
+  },
+  "area inside an image map": {
+    "prefix": "area",
+    "body": "area class: \"${1}\" do"
+  },
+  "line break": {
+    "prefix": "br",
+    "body": "br class: \"${1}\" do"
+  },
+  "thematic break": {
+    "prefix": "hr",
+    "body": "hr class: \"${1}\" do"
+  },
+  "embeds external content": {
+    "prefix": "embed",
+    "body": "embed class: \"${1}\" do"
+  },
+  "embeds an image": {
+    "prefix": "img",
+    "body": "img class: \"${1}\" do"
+  },
+  "input": {
+    "prefix": "input",
+    "body": "input class: \"${1}\" do"
+  },
+  "search input": {
+    "prefix": "search",
+    "body": "search class: \"${1}\" do"
+  },
+  "picture | needs 1 or more <source> or <img>": {
+    "prefix": "search",
+    "body": "search class: \"${1}\" do"
+  },
+  "one or more media resources for the <picture>, <audio>, and <video>": {
+    "prefix": "source",
+    "body": "source class: \"${1}\" do"
+  },
+  "child of the media elements, <audio> and <video>": {
+    "prefix": "track",
+    "body": "track class: \"${1}\" do"
+  },
+  "word break opportunity": {
+    "prefix": "wbr",
+    "body": "wbr class: \"${1}\" do"
+  },
+  "mathML | math": {
+    "prefix": "math",
+    "body": "math do"
+  },
+  "mathML | mi": {
+    "prefix": "mi",
+    "body": "math do"
+  },
+  "mathML | mn": {
+    "prefix": "mn",
+    "body": "mn do"
+  },
+  "mathML | mo": {
+    "prefix": "mo",
+    "body": "mo do"
+  },
+  "mathML | ms": {
+    "prefix": "ms",
+    "body": "ms do"
+  },
+  "mathML | mspace": {
+    "prefix": "mspace",
+    "body": "mspace do"
+  },
+  "mathML | mtext": {
+    "prefix": "mtext",
+    "body": "mtext do"
+  },
+  "mathML | merror": {
+    "prefix": "merror",
+    "body": "merror do"
+  },
+  "mathML | mfrac": {
+    "prefix": "mfrac",
+    "body": "mfrac do"
+  },
+  "mathML | mpadded": {
+    "prefix": "mpadded",
+    "body": "mpadded do"
+  },
+  "mathML | mphantom": {
+    "prefix": "mphantom",
+    "body": "mphantom do"
+  },
+  "mathML | mroot": {
+    "prefix": "mroot",
+    "body": "mroot do"
+  },
+  "mathML | mrow": {
+    "prefix": "mrow",
+    "body": "mrow do"
+  },
+  "mathML | msqrt": {
+    "prefix": "msqrt",
+    "body": "msqrt do"
+  },
+  "mathML | mstyle": {
+    "prefix": "mstyle",
+    "body": "mstyle do"
+  },
+  "mathML | mmultiscripts": {
+    "prefix": "mmultiscripts",
+    "body": "mmultiscripts do"
+  },
+  "mathML | mover": {
+    "prefix": "mover",
+    "body": "mover do"
+  },
+  "mathML | msub": {
+    "prefix": "msub",
+    "body": "msub do"
+  },
+  "mathML | msubsup": {
+    "prefix": "msubsup",
+    "body": "msubsup do"
+  },
+  "mathML | msup": {
+    "prefix": "msup",
+    "body": "msup do"
+  },
+  "mathML | munder": {
+    "prefix": "munder",
+    "body": "munder do"
+  },
+  "mathML | munderover": {
+    "prefix": "munderover",
+    "body": "munderover do"
+  },
+  "mathML | mtable": {
+    "prefix": "mtable",
+    "body": "mtable do"
+  },
+  "mathML | mtd": {
+    "prefix": "mtd",
+    "body": "mtd do"
+  },
+  "mathML | mtr": {
+    "prefix": "mtr",
+    "body": "mtr do"
+  },
+  "mathML | annotation": {
+    "prefix": "annotation",
+    "body": "annotation do"
+  },
+  "mathML | semantic": {
+    "prefix": "semantic",
+    "body": "semanticsdo"
   }
 }

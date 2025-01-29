@@ -43,6 +43,10 @@ require('mini.indentscope').setup({
   }
 })
 
+-- HARPOON2
+require("harpoon"):setup()
+
+-- SNIPPETS
 -- see: https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md#loaders
 -- Using an empty {} will use runtimepath, check it with: :lua =vim.opt.runtimepath._value
 -- Check logs with: :lua require("luasnip").log.open()
@@ -118,7 +122,8 @@ cmp.setup({
     ["<CR>"] = cmp.mapping(function(fallback)
       if cmp.visible() then
         if luasnip.expandable() then
-          luasnip.expand()
+          --luasnip.expand()
+          cmp.confirm({ select = true })
         else
           cmp.confirm({ select = true })
         end
@@ -224,16 +229,16 @@ require("nvim-tree").setup({
       return vim.keymap.set("n", bind, command,
         { buffer = bufnr, noremap = true, silent = true, nowait = true, desc = 'nvim-tree: ' .. desc })
     end
-    local api = require('nvim-tree.api')
-    api.config.mappings.default_on_attach(bufnr) -- default mapping
+    local n_api = require('nvim-tree.api')
+    n_api.config.mappings.default_on_attach(bufnr) -- default mapping
 
-    noremap('<C-up>', api.tree.change_root_to_parent, "Dir up")
-    noremap('s', api.node.open.vertical, "Open: Vertical Split")
-    noremap('v', api.node.open.horizontal, "Open: Horizontal Split")
-    noremap('?', api.tree.toggle_help, "Help")
+    noremap('<C-up>', n_api.tree.change_root_to_parent, "Dir up")
+    noremap('s', n_api.node.open.vertical, "Open: Vertical Split")
+    noremap('v', n_api.node.open.horizontal, "Open: Horizontal Split")
+    noremap('?', n_api.tree.toggle_help, "Help")
     noremap('P',
       function()
-        local node = api.tree.get_node_under_cursor()
+        local node = n_api.tree.get_node_under_cursor()
         print(node.absolute_path)
       end, "Print Node Path")
   end,

@@ -13,8 +13,10 @@
   environment.etc."nvim/snippets/elixir.json".source = ./snippets/elixir.json;
   environment.etc."nvim/snippets/eelixir.json".source = ./snippets/eelixir.json;
   environment.etc."nvim/snippets/tailwind.json".source = ./snippets/tailwind.json;
-  environment.etc."nvim/snippets/temple.json".source = ./snippets/temple.json;
   environment.etc."nvim/snippets/package.json".source = ./snippets/package.json;
+
+  # last update: c0f1306db5814e0df76cd942ae59b03e43ea0493
+  environment.etc."nvim/snippets/temple.json".source = ./snippets/temple.json;
 
   environment.systemPackages = with pkgs; [
     # Syntax Highlight
@@ -42,7 +44,7 @@
     #python310Packages.python-lsp-server # pylsp
     nodePackages.svelte-language-server
     vscode-langservers-extracted # JS
-    typst-lsp
+    tinymist # typst lsp
     lua-language-server
     terraform-ls
 
