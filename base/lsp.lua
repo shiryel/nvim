@@ -151,9 +151,9 @@ local function on_attach(client, bufnr)
 end
 
 local function capabilities()
-  --local default_cap = vim.lsp.protocol.make_client_capabilities()
-  --return require("cmp_nvim_lsp").default_capabilities(default_cap)
-  return require("cmp_nvim_lsp").default_capabilities()
+  local default_cap = vim.lsp.protocol.make_client_capabilities()
+  return default_cap
+  --return require("cmp_nvim_lsp").default_capabilities()
 end
 
 -- vim.lsp.set_log_level("debug")

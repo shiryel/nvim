@@ -1,3 +1,8 @@
+function inspect(...)
+  -- :message
+  return print(vim.inspect(...))
+end
+
 -------------
 -- Options --
 -------------
@@ -37,6 +42,7 @@ o.softtabstop = 2 -- Spaces that a tab counts when editing
 o.shiftwidth = 2  -- Spaces to use for each step of (auto)indent
 
 -- UI Config
+pcall(vim.lsp.inlay_hint.enable)
 o.encoding = "utf8"
 o.number = true
 o.relativenumber = true -- line number is relative to cursor
@@ -52,7 +58,7 @@ o.showmatch = false     -- jump to a match when executed
 o.showmode = false      -- lightline shows the status not vim
 o.showtabline = 2       -- always show files with tab page labels
 o.shortmess =
-"ac"                    -- avoid hit-enter prompts, a = abbreviation without loss, c = avoid showing message extra message when using completion
+"acA"                   -- avoid hit-enter prompts, a = abbreviation without loss, c = avoid showing message extra message when using completion, A = don't give the "ATTENTION" message when an existing swap file is found.
 o.updatetime = 300      -- time (ms) to save in swap.  You will have bad experience for diagnostic messages when it's default 4000.
 o.signcolumn = "yes"    -- column for error signs
 o.showcmd = true        -- show commands in the last line off screen
@@ -72,7 +78,6 @@ o.laststatus = 2 -- always shows the status line on other windows
 o.backup = false          -- no backup file when overwriting
 o.writebackup = false     -- no make backup before overwriting
 o.swapfile = true         -- enable swapfile (dont use it with confidential information, that even root must not be able to acess!)
-o.shortmess = "A"         -- don't give the "ATTENTION" message when an existing swap file is found.
 o.hidden = true           -- buffer continue to exists when the file is abandoned
 o.history = 100           -- history of the : commands
 do end
@@ -91,7 +96,6 @@ o.ignorecase = true -- ignorecase option :P
 -- completion
 o.wildmenu = true                 -- menu inline
 o.wildmode = "full,list:lastused" -- full fist because is how the plugin works
-o.completeopt = "menu,menuone,preview,noselect,noinsert"
 
 -- ignore on tab completing
 vim.opt.wildignore:append({ "*.o", "*~", ".**", "build/**", "log/**", "tmp/**" })
@@ -159,17 +163,6 @@ nnoremap("<c-right>", "<c-w><c-l>")
 nnoremap("<leader>be", ":bp<cr>", "previous buffer")
 nnoremap("<leader>bo", ":bn<cr>", "next buffer")
 
--- Harpoon2
-local harpoon = require("harpoon")
-nnoremap("<C-a>", function() harpoon:list():add() end, "add to list")
-nnoremap("<C-s>", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, "toggle list")
-nnoremap("<C-1>", function() harpoon:list():select(1) end, "select 1 from list")
-nnoremap("<C-2>", function() harpoon:list():select(2) end, "select 2 from list")
-nnoremap("<C-3>", function() harpoon:list():select(3) end, "select 3 from list")
-nnoremap("<C-4>", function() harpoon:list():select(4) end, "select 4 from list")
-nnoremap("<C-q>", function() harpoon:list():prev() end, "toggle to previous buffer on list")
-nnoremap("<C-d>", function() harpoon:list():next() end, "toggle to next buffer on list")
-
 -- Clipboard
 
 -- see: https://github.com/ibhagwan/fzf-lua/issues/808#issuecomment-1620955734
@@ -199,48 +192,6 @@ nnoremap("<leader><tab>", ":retab<cr>", "tabs to spaces")
 nnoremap("<leader>T", ":botright terminal<cr> <bar> i", "open terminal")
 tnoremap("<Esc>", "<C-\\><C-n>", "normal mode")
 tnoremap("<C-up>", "<C-\\><C-n><c-w><c-k>", "navigate up")
-
--- Aerial --
-nnoremap("<leader>a", "<cmd>AerialToggle!<cr>", "toggle aerial")
-
--- Nvim Tree --
-nnoremap("<leader>e", ":NvimTreeFindFile<cr>", "open file tree")
-nnoremap("<leader>E", ":NvimTreeToggle<cr>", "toggle file tree")
-
--- Fzf-lua --
-local fzf = require('fzf-lua')
-nnoremap("<Leader>sb", fzf.buffers, "open buffers")
-nnoremap("<Leader>sf", fzf.files, "find or fd on a path")
-nnoremap("<Leader>sF", fzf.oldfiles, "opened files history")
-nnoremap("<Leader>st", fzf.tabs, "open tabs")
-nnoremap("<Leader>sT", fzf.tags, "search project tags")
-nnoremap("<Leader>sa", fzf.grep_project, "search all project lines")
-nnoremap("<Leader>ss", fzf.live_grep_glob, "live grep current project")
-nnoremap("<Leader>sS", fzf.live_grep_resume, "live grep continue last search")
-nnoremap("<Leader>sh", fzf.search_history, "search history")
-nnoremap("<Leader>sq", fzf.quickfix, "quickfix list")
-nnoremap("<Leader>sQ", fzf.quickfix_stack, "quickfix stack")
-nnoremap("<Leader>sl", fzf.loclist, "location list")
-nnoremap("<Leader>sL", fzf.loclist_stack, "location stack")
-nnoremap("<Leader>so", fzf.jumps, "jumps")
-nnoremap("<Leader>sr", fzf.registers, "registers")
-nnoremap("<Leader>sk", fzf.keymaps, "keymaps")
-nnoremap("<Leader>sc", fzf.changes, "changes")
-nnoremap("<Leader>s:", fzf.command_history, "commands history")
-nnoremap("<Leader>s/", fzf.search_history, "search history")
-nnoremap("<Leader>s'", fzf.marks, "marks")
--- git
--- commits: checkout <cr> | reset mixed <C-r>m | reset soft <C-r>s | reset hard <C-r>h
-nnoremap("<Leader>gc", fzf.git_commits, "git commit log (project)")
--- buffer commits: checkout <cr>
-nnoremap("<Leader>gb", fzf.git_bcommits, "git commit log (buffer)")
--- branches: checkout <cr> | track <C-t> | rebase <C-r> | create <C-a> | switch <C-s> | delete <C-d> | merge <C-y>
-nnoremap("<Leader>gt", fzf.git_branches, "git branches")
-nnoremap("<Leader>gs", fzf.git_status, "git status")
-nnoremap("<Leader>gS", fzf.git_stash, "git stash")
-
--- VCoolor --
-nnoremap("<leader>c", ":CccPick<CR>", "pick color")
 
 -- Completion Menu --
 -- <C-i> - open

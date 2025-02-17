@@ -1,19 +1,88 @@
 final: prev:
+
 let
-  nvim-focus = prev.vimUtils.buildVimPlugin {
-    pname = "focus-nvim";
-    version = "git";
-    src = prev.fetchFromGitHub {
-      owner = "nvim-focus";
-      repo = "focus.nvim";
-      rev = "31f41d91b6b331faa07f0a513adcbc37087d028d";
-      sha256 = "sha256-IOMhyplEyLEPJ/oXFjOfs7uXY52AcVrSZuHV7t4NeUE=";
-    };
-  };
+  base_plugins = with final.vimPlugins; [
+    # THEME
+    kanagawa-nvim
+
+    # LSP
+    nvim-lspconfig
+
+    # NAVIGATION
+    nvim-tree-lua
+    fzf-lua
+    #plenary-nvim
+    #telescope-nvim
+    #telescope-fzf-native-nvim
+  ];
+
+  full_plugins = with final.vimPlugins; [
+    # LSP
+    aerial-nvim
+    #flutter-tools-nvim # sets up dartls + flutter utils
+
+    # COMPLETION
+    nvim-cmp
+    cmp-nvim-lsp
+    cmp-nvim-lsp-document-symbol # type of the symbol
+    cmp-nvim-lsp-signature-help # params autocompletion
+    cmp-nvim-lua # lua completion
+    cmp-buffer
+    cmp-path
+    cmp_luasnip
+    cmp-cmdline
+    #cmp-omni
+    #kotlin-vim
+    #nvim-treesitter-textobjects
+
+    # SNIPPET
+    luasnip
+
+    # DEBUGGER
+    nvim-dap
+    nvim-dap-ui
+
+    # GIT
+    gitsigns-nvim
+    diffview-nvim
+
+    # NAVIGATION
+    harpoon2
+    nvim-web-devicons
+
+    # EXTRA
+    mini-nvim
+    which-key-nvim
+    ccc-nvim
+    focus-nvim
+  ];
 in
 {
   # Fixes Neovide recompiling every update
   neovide = (prev.neovide.override { neovim = prev.neovim; });
+
+  neovim-full = (prev.neovim.override {
+    configure = {
+      customRC = ''
+        lua << EOF
+          ${builtins.readFile ./base/configs.lua}
+          ${builtins.readFile ./base/plugins.lua}
+          ${builtins.readFile ./base/lsp.lua}
+          ${builtins.readFile ./base/cmp.lua}
+
+          ${builtins.readFile ./full/dap.lua}
+          ${builtins.readFile ./full/plugins.lua}
+        EOF
+      '';
+      #${builtins.readFile ./full/cmp.lua}
+      packages.myPlugins = {
+        # loaded on launch
+        start = base_plugins ++ full_plugins ++ [
+          (final.vimPlugins.nvim-treesitter.withPlugins (_: final.tree-sitter.allGrammars))
+        ];
+      };
+    };
+  });
 
   neovim = (prev.neovim.override {
     configure = {
@@ -22,93 +91,36 @@ in
       # do a cat on it to see the file loading the plugins
       customRC = ''
         lua << EOF
-          ${builtins.readFile ./lua/init.lua}
-
-          ${builtins.readFile ./lua/plugins.lua}
-          ${builtins.readFile ./lua/lsp.lua}
-          ${builtins.readFile ./lua/configs.lua}
-          ${builtins.readFile ./lua/dap.lua}
+          ${builtins.readFile ./base/configs.lua}
+          ${builtins.readFile ./base/plugins.lua}
+          ${builtins.readFile ./base/lsp.lua}
+          ${builtins.readFile ./base/cmp.lua}
         EOF
       '';
       # myPlugins can be any name
       packages.myPlugins = {
         # loaded on launch
-        start = with prev.vimPlugins; [
-          #
-          # THEME
-          #
-          # maybe change to Tomorrow Night (Bright) [the default of alacritty] ?
-          #vim-code-dark
-          kanagawa-nvim
-          #
-          # LSP
-          #
-          nvim-lspconfig
-          aerial-nvim
-          #flutter-tools-nvim # sets up dartls + flutter utils
-          #
-          # DEBUGGER
-          #
-          nvim-dap
-          nvim-dap-ui
-          #
-          # COMPLETION
-          #
-          nvim-cmp
-          cmp-nvim-lsp
-          cmp-nvim-lsp-document-symbol # type of the symbol
-          cmp-nvim-lsp-signature-help # params autocompletion
-          cmp-nvim-lua # lua completion
-          cmp-buffer
-          cmp-path
-          cmp_luasnip
-          #cmp-omni
-          cmp-cmdline
-          #
-          # SNIPPET
-          #
-          luasnip
+        start = base_plugins ++ [
           #
           # SYNTAX HIGHLIGHT
           #
-          #(nvim-treesitter.withPlugins (plugins: tree-sitter.allGrammars))
           # remove in nvim 0.10 ? (https://github.com/nvim-telescope/telescope.nvim/issues/2498)
-          (nvim-treesitter.withPlugins (plugins: with plugins; [
+          (final.vimPlugins.nvim-treesitter.withPlugins (plugins: with plugins; [
             # common
             tree-sitter-markdown
             tree-sitter-markdown-inline
-            tree-sitter-comment
             # languages
             tree-sitter-elixir
             tree-sitter-heex
-            tree-sitter-erlang
             tree-sitter-nix
-            tree-sitter-rust
             tree-sitter-c
             tree-sitter-cpp
-            tree-sitter-llvm
-            tree-sitter-c-sharp
-            tree-sitter-clojure
-            tree-sitter-commonlisp
-            tree-sitter-hcl # terraform / tofu
-            #tree-sitter-kotlin
-            tree-sitter-zig
             tree-sitter-lua
-            tree-sitter-elm
-            tree-sitter-haskell
-            tree-sitter-dart
-            tree-sitter-gdscript
-            tree-sitter-godot-resource
-            tree-sitter-typst
             # web
-            tree-sitter-svelte
             tree-sitter-javascript
-            tree-sitter-typescript
             tree-sitter-html
             tree-sitter-css
-            tree-sitter-scss
             # tools
-            tree-sitter-vim
             tree-sitter-dot
             tree-sitter-cmake
             tree-sitter-make
@@ -116,33 +128,7 @@ in
             tree-sitter-yaml
             tree-sitter-toml
             tree-sitter-json
-            tree-sitter-regex
-            tree-sitter-graphql
           ]))
-          #kotlin-vim
-          #nvim-treesitter-textobjects
-          #
-          # GIT
-          #
-          gitsigns-nvim
-          diffview-nvim
-          #
-          # NAVIGATION
-          #
-          nvim-tree-lua
-          nvim-web-devicons
-          fzf-lua
-          harpoon2
-          #plenary-nvim
-          #telescope-nvim
-          #telescope-fzf-native-nvim
-          #nvim-focus
-          #
-          # EXTRA
-          #
-          mini-nvim
-          which-key-nvim
-          ccc-nvim
         ];
         # manually loadable by calling `:packadd $plugin-name`
         opt = [ ];
