@@ -63,7 +63,7 @@ o.updatetime = 300      -- time (ms) to save in swap.  You will have bad experie
 o.signcolumn = "yes"    -- column for error signs
 o.showcmd = true        -- show commands in the last line off screen
 o.cmdheight = 2         -- better display for messages
-o.scrolloff = 5         -- centers the cursor when moving
+o.scrolloff = 3         -- centers the cursor when moving
 -- give us a realtime preview of substitution before we send it "set list " show formating characters
 o.inccommand = "nosplit"
 o.lcs = "eol:\194\172,extends:\226\157\175,precedes:\226\157\174,tab:>-" -- the formating characters
@@ -140,8 +140,8 @@ o.foldlevelstart = 1 -- some folds closed when start editing (1)
 o.foldnestmax = 20   -- limit the folds in the indent and syntax
 o.foldminlines = 1   -- limit the folds in the indent and syntax
 
-nnoremap("<leader>z", "za", "Toogle folder under cursor")
-nnoremap("<leader>Z", "zA", "Toogle all folders under cursor")
+--nnoremap("<leader>z", "za", "Toogle folder under cursor")
+--nnoremap("<leader>Z", "zA", "Toogle all folders under cursor")
 
 -- Spell
 -- :set spell – Turn on spell checking
@@ -150,8 +150,8 @@ nnoremap("<leader>Z", "zA", "Toogle all folders under cursor")
 -- zg – Good word: Add the word under the cursor to the dictionary
 -- zw – Woops! Undo and remove the word from the dictionary
 o.spell = true
-nnoremap("<leader>n", "]]s<cr>", "Jump to the next misspelled word")
-nnoremap("<leader>N", "]]s<cr>", "Jump to the previous misspelled word")
+--nnoremap("<leader>n", "]]s<cr>", "Jump to the next misspelled word")
+--nnoremap("<leader>N", "]]s<cr>", "Jump to the previous misspelled word")
 
 -- Buffer moves
 nnoremap("<c-left>", "<c-w><c-h>")
@@ -160,8 +160,10 @@ nnoremap("<c-up>", "<c-w><c-k>")
 nnoremap("<c-right>", "<c-w><c-l>")
 
 -- Buffer changes
-nnoremap("<leader>be", ":bp<cr>", "previous buffer")
-nnoremap("<leader>bo", ":bn<cr>", "next buffer")
+nnoremap("<c-b>", ":bp<cr>", "previous buffer")
+nnoremap("<c-B>", ":bn<cr>", "next buffer")
+
+nnoremap("<Tab>", "gt", "next tab")
 
 -- Clipboard
 
@@ -182,16 +184,16 @@ if g.neovide then
 end
 
 -- Unselect
-nnoremap("<leader>/", ":noh<cr>", "unselect")
+nnoremap("<leader><leader>", ":noh<cr>", "unselect")
 
 -- Convert existing tabs to spaces
-nnoremap("<leader><tab>", ":retab<cr>", "tabs to spaces")
+nnoremap("<c-tab>", ":retab<cr>", "tabs to spaces")
 
 -- Open terminal
 --nnoremap("<leader>T", ":sp <Bar> :terminal<cr> <bar> i", "open terminal")
-nnoremap("<leader>T", ":botright terminal<cr> <bar> i", "open terminal")
-tnoremap("<Esc>", "<C-\\><C-n>", "normal mode")
-tnoremap("<C-up>", "<C-\\><C-n><c-w><c-k>", "navigate up")
+nnoremap("<c-t>", ":botright terminal<cr> <bar> i", "open terminal")
+--tnoremap("<Esc>", "<C-\\><C-n>", "normal mode") -- NOTE: breaks ranger
+tnoremap("<c-up>", "<C-\\><C-n><c-w><c-k>", "navigate up")
 
 -- Completion Menu --
 -- <C-i> - open
@@ -219,3 +221,59 @@ c("au FileType gdscript set noexpandtab")
 
 c("au BufNewFile,BufRead *.yrl set filetype=erlang")
 c("au BufNewFile,BufRead *.xrl set filetype=erlang")
+
+-- Netrw
+
+--local options_append = {
+--  netrw_keepdir = 0,             --Keep the current directory and the browsing directory synced
+--  netrw_winsize = "17",          -- 17% size
+--  netrw_banner = "0",            -- hide banner
+--  netrw_localmkdir = "mkdir -p", -- change mkdir cmd
+--  netrw_localcopycmd = "cp -r",  -- change copy command
+--  netrw_localrmdir = "rm -r",    -- change delete command
+--  netrw_list_hide = [['\(^\|\s\s\)\zs\.\S\+']],
+--}
+--
+--for k, v in pairs(options_append) do
+--  g[k] = v
+--end
+--
+--vim.api.nvim_create_autocmd("filetype", {
+--  pattern = "netrw",
+--  callback = function()
+--    local bind = function(lhs, rhs)
+--      vim.keymap.set("n", lhs, rhs, { remap = true, buffer = true })
+--    end
+--
+--    -- Navigation
+--    bind("h", "a")                     -- Cycles between normal display, hiding and showing
+--    bind("p", "u")                     -- preview dir
+--    bind("<C-up>", "-^")               -- go up
+--    bind(".", "gh")                    -- toggle dotfiles
+--    bind("<leader>E", ":Lexplore<CR>") -- close if open
+--
+--    -- Marks
+--    bind("<TAB>", "mf")         -- toggle mark
+--    bind("<S-TAB>", "mF")       -- unmark
+--    bind("<leader><TAB>", "mu") -- unmark all
+--
+--    -- Files
+--    bind("a", ":!touch ") -- create file
+--    --bind("fd", ":!mkdir -p ") -- create folder
+--    --bind("fc", ":!cp -r ")    -- copy
+--    --bind("D", ":!rm -r ")   -- delete
+--
+--    -- Disable
+--    bind("C", "<NOP>")  -- Setting the editing window
+--    bind("d", "<NOP>")  -- Make a directory
+--    bind("gd", "<NOP>") -- Force treatment as directory
+--    bind("gf", "<NOP>") -- Force treatment as file
+--    bind("I", "<NOP>")  -- Toggle the displaying of the banner
+--    bind("O", "<NOP>")  -- Obtain a file specified by cursor
+--    bind("p", "<NOP>")  -- Preview the file
+--    bind("P", "<NOP>")  -- Browse in the previously used window
+--    bind("%", "<NOP>")  -- Open a new file in netrw's current directory
+--  end,
+--})
+--
+--nnoremap("<leader>E", ":Lexplore<CR>", "toggle file tree")

@@ -19,6 +19,8 @@
   environment.etc."nvim/snippets/temple.json".source = ./snippets/temple.json;
 
   environment.systemPackages = with pkgs; [
+    ranger
+
     # Syntax Highlight
     tree-sitter
     # for fzf-vim
@@ -51,9 +53,6 @@
     # Formatters
     nixpkgs-fmt # Nix
     rustfmt # Rust
-
-    neovim
-    #neovide
 
     gcc
   ];

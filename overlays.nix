@@ -1,22 +1,28 @@
 final: prev:
-
 let
-  base_plugins = with final.vimPlugins; [
-    # THEME
-    kanagawa-nvim
+  _ranger = final.vimUtils.buildVimPlugin {
+    pname = "ranger";
+    version = "builtin";
+    src = ./plugins/ranger;
+    doCheck = false;
+  };
 
+  base_plugins = with final.vimPlugins; [
     # LSP
     nvim-lspconfig
 
     # NAVIGATION
-    nvim-tree-lua
+    _ranger
     fzf-lua
-    #plenary-nvim
-    #telescope-nvim
-    #telescope-fzf-native-nvim
   ];
 
   full_plugins = with final.vimPlugins; [
+    # THEME
+    kanagawa-nvim
+
+    # LLM
+    codecompanion-nvim
+
     # LSP
     aerial-nvim
     #flutter-tools-nvim # sets up dartls + flutter utils
@@ -43,14 +49,21 @@ let
     nvim-dap-ui
 
     # GIT
+    neogit
     gitsigns-nvim
     diffview-nvim
 
     # NAVIGATION
     harpoon2
     nvim-web-devicons
+    #nvim-tree-lua
+    #telescope-nvim
+    #telescope-fzf-native-nvim
+    #telescope-file-browser-nvim
 
     # EXTRA
+    tmux-nvim
+    persisted-nvim
     mini-nvim
     which-key-nvim
     ccc-nvim
@@ -58,6 +71,19 @@ let
   ];
 in
 {
+  # NOTE: we pin base plugins for stability and security reasons
+  vimPlugins = prev.vimPlugins.extend (vfinal: vprev: {
+    fzf-lua = vprev.fzf-lua.overrideAttrs (old: {
+      version = "22-02-2025";
+      src = prev.fetchFromGitHub {
+        owner = "ibhagwan";
+        repo = "fzf-lua";
+        rev = "9b84b53f3297d4912d7eb95b979e9b27e2e61281";
+        sha256 = "sha256-uNH+Sq5TxNIyleY7D17LRd1IPcO9K2WqWaD0A5FZbtw=";
+      };
+    });
+  });
+
   # Fixes Neovide recompiling every update
   neovide = (prev.neovide.override { neovim = prev.neovim; });
 
@@ -68,17 +94,17 @@ in
           ${builtins.readFile ./base/configs.lua}
           ${builtins.readFile ./base/plugins.lua}
           ${builtins.readFile ./base/lsp.lua}
-          ${builtins.readFile ./base/cmp.lua}
+          ${builtins.readFile ./base/theme.lua}
 
+          ${builtins.readFile ./full/cmp.lua}
           ${builtins.readFile ./full/dap.lua}
           ${builtins.readFile ./full/plugins.lua}
         EOF
       '';
-      #${builtins.readFile ./full/cmp.lua}
       packages.myPlugins = {
         # loaded on launch
         start = base_plugins ++ full_plugins ++ [
-          (final.vimPlugins.nvim-treesitter.withPlugins (_: final.tree-sitter.allGrammars))
+          (final.vimPlugins.nvim-treesitter.withPlugins (_: final.vimPlugins.nvim-treesitter.allGrammars))
         ];
       };
     };
@@ -94,6 +120,7 @@ in
           ${builtins.readFile ./base/configs.lua}
           ${builtins.readFile ./base/plugins.lua}
           ${builtins.readFile ./base/lsp.lua}
+          ${builtins.readFile ./base/theme.lua}
           ${builtins.readFile ./base/cmp.lua}
         EOF
       '';
