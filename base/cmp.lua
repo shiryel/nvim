@@ -11,7 +11,8 @@ local function open_completion()
     insert_count = insert_count + 1
   end
 
-  if (vim.fn.pumvisible() == 0) and (insert_count >= 2 or char == "." or char == ":") then
+  if vim.opt.omnifunc._value ~= "" and (vim.fn.pumvisible() == 0)
+      and (insert_count >= 2 or char == "." or char == ":") then
     vim.api.nvim_input("<c-x><c-o>")
   end
 end

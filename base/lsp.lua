@@ -27,12 +27,12 @@ local function on_attach(client, bufnr)
   local d = vim.diagnostic
 
   --noremap("<leader>qq", tb.diagnostics, "open diagnostics float window")
-  noremap("<leader>qq", fzf.diagnostics_document, "open diagnostics float window")
-  noremap("<leader>ql", d.setloclist, "open diagnostics buffer")
-  noremap("<leader>qh", d.show, "show diagnostics")
-  noremap("<leader>qH", d.hide, "hide diagnostics")
-  noremap("<leader>qn", d.get_next, "get next diagnostic")
-  noremap("<leader>qp", d.get_prev, "get previous diagnostic")
+  noremap("<leader>dd", fzf.diagnostics_document, "open diagnostics float window")
+  noremap("<leader>db", d.setloclist, "open diagnostics buffer")
+  noremap("<leader>ds", d.show, "show diagnostics")
+  noremap("<leader>dh", d.hide, "hide diagnostics")
+  noremap("<leader>dn", d.get_next, "get next diagnostic")
+  noremap("<leader>dp", d.get_prev, "get previous diagnostic")
 
   -- FORMATING --
 
@@ -40,13 +40,13 @@ local function on_attach(client, bufnr)
   local b = vim.lsp.buf
 
   -- Formats the current buffer
-  noremap("<leader>f", b.format, "format")
-  voremap("<leader>f", b.format, "format") -- range format is configured automatically when bound to visual mode
+  noremap("<c-f>", b.format, "format")
+  voremap("<c-f>", b.format, "format") -- range format is configured automatically when bound to visual mode
 
   -- LOCATIONS --
 
   -- see: https://github.com/ibhagwan/fzf-lua/issues/669
-  noremap("ga", fzf.lsp_finder, "All LSP locations, combined view")
+  noremap("ga", fzf.lsp_finder, "go-to any LSP location (combined view)")
 
   -- Lists all the references to the symbol under the cursor in the quickfix window
   if cap.referencesProvider then
@@ -117,7 +117,7 @@ local function on_attach(client, bufnr)
 
   -- Renames all references to the symbol under the cursor
   if cap.renameProvider then
-    noremap("<leader>rn", b.rename, "rename all references")
+    noremap("<leader>r>", b.rename, "rename all references")
   end
 
   -- HIGHLIGHT --

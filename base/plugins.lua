@@ -6,59 +6,119 @@ local function nnoremap(bind, command, desc)
   return vim.keymap.set("n", bind, command, { noremap = true, silent = true, desc = desc })
 end
 
---require('telescope').setup{
+--local telescope = require('telescope')
+--local telescope_actions = require "telescope.actions"
+--telescope.setup {
 --  defaults = {
+--    -- see: https://github.com/nvim-telescope/telescope.nvim/blob/master/lua/telescope/mappings.lua
 --    mappings = {
 --      i = {
---        ["<C-up>"] = "preview_scrolling_up",
---        ["<C-down>"] = "preview_scrolling_down",
---        ["<C-left>"] = "preview_scrolling_left",
---        ["<C-right>"] = "preview_scrolling_right",
+--        ["<c-up>"] = telescope_actions.preview_scrolling_up,
+--        ["<c-down>"] = telescope_actions.preview_scrolling_down,
+--        -- c-left/right is used on the input
+--        ["<c-s-left>"] = telescope_actions.preview_scrolling_left,
+--        ["<c-s-right>"] = telescope_actions.preview_scrolling_right,
+--        -- https://github.com/nvim-telescope/telescope.nvim/issues/564
+--        ["<c-s>"] = telescope_actions.to_fuzzy_refine,
 --        -- map actions.which_key to <C-h> (default: <C-/>)
 --        -- actions.which_key shows the mappings for your picker,
 --        -- e.g. git_{create, delete, ...}_branch for the git_branches picker
---        ["<C-h>"] = "which_key"
+--        ["<c-h>"] = telescope_actions.which_key
 --      }
 --    }
---  }
+--  },
+--  extensions = {
+--    file_browser = {
+--      theme = "ivy",
+--      -- disables netrw and use telescope-file-browser in its place
+--      hijack_netrw = true,
+--      mappings = {
+--        ["i"] = {
+--          -- your custom insert mode mappings
+--        },
+--        ["n"] = {
+--          -- your custom normal mode mappings
+--        },
+--      },
+--    },
+--  },
 --}
+--
+---- FZF does not work with live_grep
+---- :Telescope fzf is a bug
+---- Needs to be called right after telesctope to get fzf loaded
+--telescope.load_extension('fzf')
+--
+--local telescope_b = require('telescope.builtin')
+--nnoremap("<leader>b", telescope_b.buffers, "open buffers")
+--nnoremap("<leader>f", telescope_b.find_files, "find or fd on a path")
+--nnoremap("<leader>F", telescope_b.oldfiles, "opened files history")
+----nnoremap("<leader>t", telescope_b.tabs, "open tabs")
+--nnoremap("<leader>t", telescope_b.tags, "search project tags")
+--nnoremap("<leader>s", telescope_b.live_grep, "search using rg, <c-s> to refine with fzf, respects .gitignore")
+--nnoremap("<leader>a",
+--  function() telescope_b.grep_string({ shorten_path = true, word_match = "-w" }) end,
+--  "search on current working directory")
+--nnoremap("<leader>A",
+--  function() telescope_b.grep_string({ shorten_path = true, word_match = "-w", only_sort_text = true }) end,
+--  "search on current working directory")
+--nnoremap("<leader>S", telescope_b.search_history, "search history")
+--nnoremap("<leader>q", telescope_b.quickfix, "quickfix list")
+--nnoremap("<leader>Q", telescope_b.quickfixhistory, "quickfix history")
+--nnoremap("<leader>l", telescope_b.loclist, "location list")
+--nnoremap("<leader>o", telescope_b.jumplist, "jumps")
+--nnoremap("<leader>\"", telescope_b.registers, "registers")
+--nnoremap("<leader>k", telescope_b.keymaps, "keymaps")
+--nnoremap("<leader>:", telescope_b.command_history, "commands history")
+--nnoremap("<leader>/", telescope_b.search_history, "search history")
+--nnoremap("<leader>'", telescope_b.marks, "marks")
+---- git
+---- commits: checkout <cr> | reset mixed <C-r>m | reset soft <C-r>s | reset hard <C-r>h
+--nnoremap("<leader>c", telescope_b.git_status, "git changes")
+--nnoremap("<leader>gc", telescope_b.git_commits, "git commit log (project)")
+---- buffer commits: checkout <cr>
+--nnoremap("<leader>gb", telescope_b.git_bcommits, "git commit log (buffer)")
+---- branches: checkout <cr> | track <C-t> | rebase <C-r> | create <C-a> | switch <C-s> | delete <C-d> | merge <C-y>
+--nnoremap("<leader>gt", telescope_b.git_branches, "git branches")
+--nnoremap("<leader>gs", telescope_b.git_status, "git status")
+--nnoremap("<leader>gS", telescope_b.git_stash, "git stash")
+--
+---- Telescope File Browser Extension
+--telescope.load_extension("file_browser")
+--nnoremap("<leader>e", ":Telescope file_browser<CR>", "open file browser")
+--nnoremap("<leader>E", ":Telescope file_browser path=%:p:h select_buffer=true<CR>", "open file browser on current path")
 
 -- Fzf-lua --
 local fzf = require('fzf-lua')
-nnoremap("<Leader>sb", fzf.buffers, "open buffers")
-nnoremap("<Leader>sf", fzf.files, "find or fd on a path")
-nnoremap("<Leader>sF", fzf.oldfiles, "opened files history")
-nnoremap("<Leader>st", fzf.tabs, "open tabs")
-nnoremap("<Leader>sT", fzf.tags, "search project tags")
-nnoremap("<Leader>sa", fzf.grep_project, "search all project lines")
-nnoremap("<Leader>ss", fzf.live_grep_glob, "live grep current project")
-nnoremap("<Leader>sS", fzf.live_grep_resume, "live grep continue last search")
-nnoremap("<Leader>sh", fzf.search_history, "search history")
-nnoremap("<Leader>sq", fzf.quickfix, "quickfix list")
-nnoremap("<Leader>sQ", fzf.quickfix_stack, "quickfix stack")
-nnoremap("<Leader>sl", fzf.loclist, "location list")
-nnoremap("<Leader>sL", fzf.loclist_stack, "location stack")
-nnoremap("<Leader>so", fzf.jumps, "jumps")
-nnoremap("<Leader>sr", fzf.registers, "registers")
-nnoremap("<Leader>sk", fzf.keymaps, "keymaps")
-nnoremap("<Leader>sc", fzf.changes, "changes")
-nnoremap("<Leader>s:", fzf.command_history, "commands history")
-nnoremap("<Leader>s/", fzf.search_history, "search history")
-nnoremap("<Leader>s'", fzf.marks, "marks")
+nnoremap("<leader>b", fzf.buffers, "open buffers")
+nnoremap("<leader>f", fzf.files, "find or fd on a path")
+nnoremap("<leader>F", fzf.oldfiles, "opened files history")
+nnoremap("<leader>t", fzf.tabs, "open tabs")
+--nnoremap("<leader>st", fzf.tags, "search project tags")
+nnoremap("<leader>a", fzf.grep_project, "search all project lines")
+nnoremap("<leader>A", fzf.search_history, "search history")
+nnoremap("<leader>s", fzf.live_grep_glob, "live grep current project")
+nnoremap("<leader>S", fzf.live_grep_resume, "live grep continue last search")
+nnoremap("<leader>q", fzf.quickfix, "quickfix list")
+nnoremap("<leader>Q", fzf.quickfix_stack, "quickfix stack")
+nnoremap("<leader>l", fzf.loclist, "location list")
+nnoremap("<leader>L", fzf.loclist_stack, "location stack")
+nnoremap("<leader>o", fzf.jumps, "jumps")
+nnoremap("<leader>\"", fzf.registers, "registers")
+nnoremap("<leader>k", fzf.keymaps, "keymaps")
+nnoremap("<leader>c", fzf.changes, "changes")
+nnoremap("<leader>:", fzf.command_history, "commands history")
+nnoremap("<leader>/", fzf.search_history, "search history")
+nnoremap("<leader>'", fzf.marks, "marks")
 -- git
 -- commits: checkout <cr> | reset mixed <C-r>m | reset soft <C-r>s | reset hard <C-r>h
-nnoremap("<Leader>gc", fzf.git_commits, "git commit log (project)")
+nnoremap("<leader>gc", fzf.git_commits, "git commit log (project)")
 -- buffer commits: checkout <cr>
-nnoremap("<Leader>gb", fzf.git_bcommits, "git commit log (buffer)")
+nnoremap("<leader>gb", fzf.git_bcommits, "git commit log (buffer)")
 -- branches: checkout <cr> | track <C-t> | rebase <C-r> | create <C-a> | switch <C-s> | delete <C-d> | merge <C-y>
-nnoremap("<Leader>gt", fzf.git_branches, "git branches")
-nnoremap("<Leader>gs", fzf.git_status, "git status")
-nnoremap("<Leader>gS", fzf.git_stash, "git stash")
-
--- FZF does not work with live_grep
--- :Telescope fzf is a bug
--- Needs to be called right after telesctope to get fzf loaded
---require('telescope').load_extension('fzf')
+nnoremap("<leader>gt", fzf.git_branches, "git branches")
+nnoremap("<leader>gs", fzf.git_status, "git status")
+nnoremap("<leader>gS", fzf.git_stash, "git stash")
 
 require('kanagawa').setup({
   undercurl = false,
@@ -98,71 +158,14 @@ require("nvim-treesitter.configs").setup({
   }
 })
 
--- nvim-tree
-require("nvim-tree").setup({
-  on_attach = function(bufnr)
-    -- use :NvimTreeGenerateOnAttach to generate this function
-    local function noremap(bind, command, desc)
-      return vim.keymap.set("n", bind, command,
-        { buffer = bufnr, noremap = true, silent = true, nowait = true, desc = 'nvim-tree: ' .. desc })
-    end
-    local n_api = require('nvim-tree.api')
-    n_api.config.mappings.default_on_attach(bufnr) -- default mapping
-
-    noremap('<C-up>', n_api.tree.change_root_to_parent, "Dir up")
-    noremap('s', n_api.node.open.vertical, "Open: Vertical Split")
-    noremap('v', n_api.node.open.horizontal, "Open: Horizontal Split")
-    noremap('?', n_api.tree.toggle_help, "Help")
-    noremap('P',
-      function()
-        local node = n_api.tree.get_node_under_cursor()
-        print(node.absolute_path)
-      end, "Print Node Path")
-  end,
-  disable_netrw = true,
-  hijack_netrw = false,
-  sort_by = "case_sensitive",
-  sync_root_with_cwd = true, -- may change root when dir change
-  respect_buf_cwd = true,    -- change to cwd when opening
-  update_focused_file = {
-    enable = false,
-    update_root = false
-  },
-  diagnostics = {
-    enable = true,
-    show_on_dirs = true,
-    icons = {
-      hint = "",
-      info = "",
-      warning = "",
-      error = ""
-    }
-  },
-  modified = {
-    enable = true
-  },
-  view = {
-    width = 36,
-  },
-  renderer = {
-    root_folder_label = false,
-    add_trailing = true
-  },
-  filters = {
-    dotfiles = false
-  },
-  actions = {
-    open_file = {
-      quit_on_open = false
-    }
-  },
-  tab = {
-    sync = {
-      open = true,
-      close = true
-    }
-  }
+-- ranger
+require("ranger").setup({
+  width = 0.9,
+  height = 0.9,
+  position = 'cc',
 })
-
-nnoremap("<leader>e", ":NvimTreeFindFile<cr>", "open file tree")
-nnoremap("<leader>E", ":NvimTreeToggle<cr>", "toggle file tree")
+nnoremap("<leader>e", ":Ranger<CR>", "ranger: open")
+nnoremap("<leader>E<left>", ":Ranger left<CR>", "ranger: open left")
+nnoremap("<leader>E<down>", ":Ranger down<CR>", "ranger: open down")
+nnoremap("<leader>E<up>", ":Ranger up<CR>", "ranger: open up")
+nnoremap("<leader>E<right>", ":Ranger right<CR>", "ranger: open right")
