@@ -67,13 +67,15 @@ let
     mini-nvim
     which-key-nvim
     ccc-nvim
-    focus-nvim
+    orgmode
   ];
 in
 {
   # NOTE: we pin base plugins for stability and security reasons
   vimPlugins = prev.vimPlugins.extend (vfinal: vprev: {
-    fzf-lua = vprev.fzf-lua.overrideAttrs (old: {
+    # overriding the existing fzf-lua breaks after some time
+    fzf-lua = prev.vimUtils.buildVimPlugin {
+      pname = "fzf-lua";
       version = "22-02-2025";
       src = prev.fetchFromGitHub {
         owner = "ibhagwan";
@@ -81,7 +83,7 @@ in
         rev = "9b84b53f3297d4912d7eb95b979e9b27e2e61281";
         sha256 = "sha256-uNH+Sq5TxNIyleY7D17LRd1IPcO9K2WqWaD0A5FZbtw=";
       };
-    });
+    };
   });
 
   # Fixes Neovide recompiling every update

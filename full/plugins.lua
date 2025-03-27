@@ -66,41 +66,35 @@ require("aerial").setup({
 })
 
 -- persisted
---vim.o.sessionoptions = "buffers,curdir,folds,help,globals,tabpages,winpos,winsize,terminal"
---local persisted = require("persisted")
---persisted.branch = function()
---  local branch = vim.fn.systemlist("git branch --show-current")[1]
---  return vim.v.shell_error == 0 and branch or nil
---end
---persisted.setup({
---  autostart = true,
---  save_dir = vim.fn.expand("~/.persisted_sessions"), -- Directory where session files are saved
---
---  follow_cwd = true,                                 -- Change the session file to match any change in the cwd?
---  use_git_branch = true,                             -- Include the git branch in the session file name?
---  autoload = true,                                   -- Automatically load the session for the cwd on Neovim startup?
---  autosave = true,
---
---  -- Function to run when `autoload = true` but there is no session to load
---  ---@type fun(): any
---  on_autoload_no_session = function() end,
---
---  allowed_dirs = { "~/code" }, -- Table of dirs that the plugin will start and autoload from
---  ignored_dirs = {},           -- Table of dirs that are ignored for starting and autoloading
---
---  --telescope = {
---  --  mappings = { -- Mappings for managing sessions in Telescope
---  --    copy_session = "<C-c>",
---  --    change_branch = "<C-b>",
---  --    delete_session = "<C-d>",
---  --  },
---  --  icons = { -- icons displayed in the Telescope picker
---  --    selected = " ",
---  --    dir = "  ",
---  --    branch = " ",
---  --  },
---  --},
---})
+vim.o.sessionoptions = "buffers,curdir,folds,help,globals,tabpages,winpos,winsize,terminal"
+require("persisted").setup({
+  autostart = true,
+
+  follow_cwd = true,     -- Change the session file to match any change in the cwd?
+  use_git_branch = true, -- Include the git branch in the session file name?
+  autoload = true,       -- Automatically load the session for the cwd on Neovim startup?
+  autosave = true,
+
+  -- Function to run when `autoload = true` but there is no session to load
+  ---@type fun(): any
+  on_autoload_no_session = function() end,
+
+  allowed_dirs = { "~/code" }, -- Table of dirs that the plugin will start and autoload from
+  ignored_dirs = {},           -- Table of dirs that are ignored for starting and autoloading
+
+  --telescope = {
+  --  mappings = { -- Mappings for managing sessions in Telescope
+  --    copy_session = "<C-c>",
+  --    change_branch = "<C-b>",
+  --    delete_session = "<C-d>",
+  --  },
+  --  icons = { -- icons displayed in the Telescope picker
+  --    selected = " ",
+  --    dir = "  ",
+  --    branch = " ",
+  --  },
+  --},
+})
 
 -- mini-nvim
 require('mini.statusline').setup({})
@@ -277,71 +271,11 @@ require("ccc").setup({
 
 nnoremap("<leader>c", ":CccPick<CR>", "pick color")
 
--- focus-nvim
-vim.opt.number = false;
-vim.opt.relativenumber = false;
-require('focus').setup({
-  enable = true,          -- Enable module
-  commands = true,        -- Create Focus commands
-  autoresize = {
-    enable = true,        -- Enable or disable auto-resizing of splits
-    width = 0,            -- Force width for the focused window
-    height = 0,           -- Force height for the focused window
-    minwidth = 42,        -- Force minimum width for the unfocused window
-    minheight = 5,        -- Force minimum height for the unfocused window
-    height_quickfix = 10, -- Set the height of quickfix panel
-  },
-  split = {
-    bufnew = false, -- Create blank buffer for new split windows
-    tmux = false,   -- Create tmux splits instead of neovim splits
-  },
-  ui = {
-    number = true,                     -- Display line numbers in the focussed window only
-    relativenumber = true,             -- Display relative line numbers in the focussed window only
-    hybridnumber = false,              -- Display hybrid line numbers in the focussed window only
-    absolutenumber_unfocussed = false, -- Preserve absolute numbers in the unfocussed windows
-
-    cursorline = true,                 -- Display a cursorline in the focussed window only
-    cursorcolumn = false,              -- Display cursorcolumn in the focussed window only
-    colorcolumn = {
-      enable = false,                  -- Display colorcolumn in the foccused window only
-      list = '+1',                     -- Set the comma-saperated list for the colorcolumn
-    },
-    signcolumn = true,                 -- Display signcolumn in the focussed window only
-    winhighlight = false,              -- Auto highlighting for focussed/unfocussed windows
-  }
-})
-
-local ignore_filetypes = { 'netrw', 'NvimTree_*', 'fterm', 'term', 'diffviewfiles' }
-local ignore_buftypes = { 'nofile', 'prompt', 'popup' }
-
-local augroup =
-    vim.api.nvim_create_augroup('FocusDisable', { clear = true })
-
-vim.api.nvim_create_autocmd('WinEnter', {
-  group = augroup,
-  callback = function(_)
-    if vim.tbl_contains(ignore_buftypes, vim.bo.buftype)
-    then
-      vim.w.focus_disable = true
-    else
-      vim.w.focus_disable = false
-    end
-  end,
-  desc = 'Disable focus autoresize for BufType',
-})
-
-vim.api.nvim_create_autocmd('FileType', {
-  group = augroup,
-  callback = function(_)
-    if vim.tbl_contains(ignore_filetypes, vim.bo.filetype) then
-      vim.b.focus_disable = true
-    else
-      vim.b.focus_disable = false
-    end
-  end,
-  desc = 'Disable focus autoresize for FileType',
-})
-
 -- tmux-nvim
 require("tmux").setup()
+
+-- nvim-orgmode
+require('orgmode').setup({
+  org_agenda_files = '~/orgfiles/**/*',
+  org_default_notes_file = '~/orgfiles/refile.org',
+})
