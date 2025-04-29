@@ -1,10 +1,39 @@
 final: prev:
 let
+  # NOTE: plugins should be with the path: /lua/$PLUGIN/init.lua
+  # To test plugins locally use the following path: ~/.config/nvim/pack/$ANY/start/$PLUGIN/lua/$PLUGIN/init.lua
+
   _ranger = final.vimUtils.buildVimPlugin {
     pname = "ranger";
     version = "builtin";
     src = ./plugins/ranger;
+    preInstall = ''
+      mkdir -p $out/lua/ranger
+    '';
+    path = "lua/ranger";
     doCheck = false;
+  };
+
+  _shade = final.vimUtils.buildVimPlugin {
+    pname = "shade";
+    version = "builtin";
+    src = ./plugins/shade;
+    preInstall = ''
+      mkdir -p $out/lua/shade
+    '';
+    path = "lua/shade";
+    doCheck = false;
+  };
+
+  _nvim-macros = prev.vimUtils.buildVimPlugin {
+    pname = "nvim-macros";
+    version = "git";
+    src = prev.fetchFromGitHub {
+      owner = "shiryel";
+      repo = "nvim-macros";
+      rev = "f29d08ee7844ed6c9552699206e8c977d6936ee4";
+      sha256 = "sha256-UDmMx4myoj0hx78C682BKMJ6RE0RQ/ilQatmMPGHtg8=";
+    };
   };
 
   base_plugins = with final.vimPlugins; [
@@ -13,6 +42,7 @@ let
 
     # NAVIGATION
     _ranger
+    _shade
     fzf-lua
   ];
 
@@ -63,11 +93,12 @@ let
 
     # EXTRA
     tmux-nvim
-    persisted-nvim
+    auto-session # alternative: persisted
     mini-nvim
     which-key-nvim
     ccc-nvim
     orgmode
+    _nvim-macros
   ];
 in
 {
@@ -96,9 +127,9 @@ in
           ${builtins.readFile ./base/configs.lua}
           ${builtins.readFile ./base/plugins.lua}
           ${builtins.readFile ./base/lsp.lua}
+          ${builtins.readFile ./base/cmp.lua}
           ${builtins.readFile ./base/theme.lua}
 
-          ${builtins.readFile ./full/cmp.lua}
           ${builtins.readFile ./full/dap.lua}
           ${builtins.readFile ./full/plugins.lua}
         EOF
@@ -122,8 +153,8 @@ in
           ${builtins.readFile ./base/configs.lua}
           ${builtins.readFile ./base/plugins.lua}
           ${builtins.readFile ./base/lsp.lua}
-          ${builtins.readFile ./base/theme.lua}
           ${builtins.readFile ./base/cmp.lua}
+          ${builtins.readFile ./base/theme.lua}
         EOF
       '';
       # myPlugins can be any name
@@ -145,6 +176,7 @@ in
             tree-sitter-c
             tree-sitter-cpp
             tree-sitter-lua
+            tree-sitter-yuck
             # web
             tree-sitter-javascript
             tree-sitter-html

@@ -68,6 +68,12 @@ o.scrolloff = 3         -- centers the cursor when moving
 o.inccommand = "nosplit"
 o.lcs = "eol:\194\172,extends:\226\157\175,precedes:\226\157\174,tab:>-" -- the formating characters
 
+-- enables virtual text/lines diagnostic to only current line
+vim.diagnostic.config({
+  virtual_text = { current_line = true },
+  --virtual_lines = { current_line = true },
+})
+
 -- StatusLine
 -- F to full name
 o.statusline = "%f%m%r%h%w %=%< [%Y] [0x%02.2B]%4v,%4l %3p%% of %L"
@@ -191,9 +197,9 @@ nnoremap("<c-tab>", ":retab<cr>", "tabs to spaces")
 
 -- Open terminal
 --nnoremap("<leader>T", ":sp <Bar> :terminal<cr> <bar> i", "open terminal")
-nnoremap("<c-t>", ":botright terminal<cr> <bar> i", "open terminal")
+--nnoremap("<c-t>", ":botright terminal<cr> <bar> i", "open terminal")
 --tnoremap("<Esc>", "<C-\\><C-n>", "normal mode") -- NOTE: breaks ranger
-tnoremap("<c-up>", "<C-\\><C-n><c-w><c-k>", "navigate up")
+--tnoremap("<c-up>", "<C-\\><C-n><c-w><c-k>", "navigate up")
 
 -- Completion Menu --
 -- <C-i> - open
