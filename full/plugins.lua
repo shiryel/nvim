@@ -5,13 +5,13 @@ end
 
 -- kanagawa
 
-require('kanagawa').setup({
-  undercurl = false,
-  colors = {
-    theme = { all = { diag = { error = "#727169" } } }, -- fujiGray
-  }
-})
-vim.cmd("colorscheme kanagawa-wave")
+--require('kanagawa').setup({
+--  undercurl = false,
+--  colors = {
+--    theme = { all = { diag = { error = "#727169" } } }, -- fujiGray
+--  }
+--})
+--vim.cmd("colorscheme kanagawa-wave")
 
 -- codecompanion-nvim
 

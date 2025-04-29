@@ -96,9 +96,9 @@ in
           ${builtins.readFile ./base/configs.lua}
           ${builtins.readFile ./base/plugins.lua}
           ${builtins.readFile ./base/lsp.lua}
+          ${builtins.readFile ./base/cmp.lua}
           ${builtins.readFile ./base/theme.lua}
 
-          ${builtins.readFile ./full/cmp.lua}
           ${builtins.readFile ./full/dap.lua}
           ${builtins.readFile ./full/plugins.lua}
         EOF
@@ -122,8 +122,8 @@ in
           ${builtins.readFile ./base/configs.lua}
           ${builtins.readFile ./base/plugins.lua}
           ${builtins.readFile ./base/lsp.lua}
-          ${builtins.readFile ./base/theme.lua}
           ${builtins.readFile ./base/cmp.lua}
+          ${builtins.readFile ./base/theme.lua}
         EOF
       '';
       # myPlugins can be any name
@@ -145,6 +145,7 @@ in
             tree-sitter-c
             tree-sitter-cpp
             tree-sitter-lua
+            tree-sitter-yuck
             # web
             tree-sitter-javascript
             tree-sitter-html
