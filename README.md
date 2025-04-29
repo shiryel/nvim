@@ -123,10 +123,10 @@ Configure with:
 | `<leader>c`   | pick color                                 | n    |
 | `<c-a>`       | harpoon: add to list                       | n    |
 | `<c-s>`       | harpoon: toggle list                       | n    |
-| `<c-5>`       | harpoon: select 1 from list                | n    |
-| `<c-5>`       | harpoon: select 2 from list                | n    |
-| `<c-5>`       | harpoon: select 3 from list                | n    |
-| `<c-5>`       | harpoon: select 4 from list                | n    |
+| `<c-1>`       | harpoon: select 1 from list                | n    |
+| `<c-2>`       | harpoon: select 2 from list                | n    |
+| `<c-3>`       | harpoon: select 3 from list                | n    |
+| `<c-4>`       | harpoon: select 4 from list                | n    |
 | `<c-5>`       | harpoon: select 5 from list                | n    |
 | `<c-q>`       | harpoon: toggle to previous buffer on list | n    |
 | `<c-d>`       | harpoon: toggle to next buffer on list     | n    |

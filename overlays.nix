@@ -7,6 +7,17 @@ let
     doCheck = false;
   };
 
+  _nvim-macros = prev.vimUtils.buildVimPlugin {
+    pname = "nvim-macros";
+    version = "git";
+    src = prev.fetchFromGitHub {
+      owner = "kr40";
+      repo = "nvim-macros";
+      rev = "f29d08ee7844ed6c9552699206e8c977d6936ee4";
+      sha256 = "sha256-UDmMx4myoj0hx78C682BKMJ6RE0RQ/ilQatmMPGHtg8=";
+    };
+  };
+
   base_plugins = with final.vimPlugins; [
     # LSP
     nvim-lspconfig
@@ -68,6 +79,7 @@ let
     which-key-nvim
     ccc-nvim
     orgmode
+    _nvim-macros
   ];
 in
 {
@@ -96,9 +108,9 @@ in
           ${builtins.readFile ./base/configs.lua}
           ${builtins.readFile ./base/plugins.lua}
           ${builtins.readFile ./base/lsp.lua}
+          ${builtins.readFile ./base/cmp.lua}
           ${builtins.readFile ./base/theme.lua}
 
-          ${builtins.readFile ./full/cmp.lua}
           ${builtins.readFile ./full/dap.lua}
           ${builtins.readFile ./full/plugins.lua}
         EOF
@@ -122,8 +134,8 @@ in
           ${builtins.readFile ./base/configs.lua}
           ${builtins.readFile ./base/plugins.lua}
           ${builtins.readFile ./base/lsp.lua}
-          ${builtins.readFile ./base/theme.lua}
           ${builtins.readFile ./base/cmp.lua}
+          ${builtins.readFile ./base/theme.lua}
         EOF
       '';
       # myPlugins can be any name
@@ -145,6 +157,7 @@ in
             tree-sitter-c
             tree-sitter-cpp
             tree-sitter-lua
+            tree-sitter-yuck
             # web
             tree-sitter-javascript
             tree-sitter-html

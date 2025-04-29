@@ -5,13 +5,13 @@ end
 
 -- kanagawa
 
-require('kanagawa').setup({
-  undercurl = false,
-  colors = {
-    theme = { all = { diag = { error = "#727169" } } }, -- fujiGray
-  }
-})
-vim.cmd("colorscheme kanagawa-wave")
+--require('kanagawa').setup({
+--  undercurl = false,
+--  colors = {
+--    theme = { all = { diag = { error = "#727169" } } }, -- fujiGray
+--  }
+--})
+--vim.cmd("colorscheme kanagawa-wave")
 
 -- codecompanion-nvim
 
@@ -278,4 +278,16 @@ require("tmux").setup()
 require('orgmode').setup({
   org_agenda_files = '~/orgfiles/**/*',
   org_default_notes_file = '~/orgfiles/refile.org',
+})
+
+-- nvim-macros
+-- Usage:
+-- :MacroYank [register]: Yanks a macro from a register. If you don't specify, it'll politely ask you to choose one.
+-- :MacroSave [register]: Saves a macro into the book of legends (aka your JSON file). It'll prompt for a register if you're feeling indecisive.
+-- :MacroSelect: Brings up your macro menu. Pick one, and it'll be ready for action.
+-- :MacroDelete: Summon a list of your macros, then select one to permanently vanish it from your collection, as if it never existed.
+require('nvim-macros').setup({
+  json_file_path = vim.fs.normalize(vim.fn.stdpath("config") .. "/macros.json"),     -- Location where the macros will be stored
+  default_macro_register = "q",                                                      -- Use as default register for :MacroYank and :MacroSave and :MacroSelect Raw functions
+  json_formatter = "none",                                                           -- can be "none" | "jq" | "yq" used to pretty print the json file (jq or yq must be installed!)
 })
