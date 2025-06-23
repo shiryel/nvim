@@ -66,6 +66,8 @@ require("nvim-treesitter.configs").setup({
   }
 })
 
+require("shade").setup()
+
 -- ranger
 local ranger = require("ranger")
 ranger.setup({
