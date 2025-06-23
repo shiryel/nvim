@@ -53,20 +53,26 @@ o.smartindent = true    -- smart ident (priority for C like langs)
 o.autoindent = true     -- copy the ident of current line when using the o or O commands
 o.wrap = true           -- continue long lines in the next line
 o.linebreak = true
-o.lazyredraw = true     -- screen will not redrawn while exec macros, registers or not typed commands
+o.lazyredraw = false    -- screen will not redrawn while exec macros, registers or not typed commands
 o.showmatch = false     -- jump to a match when executed
 o.showmode = false      -- lightline shows the status not vim
 o.showtabline = 2       -- always show files with tab page labels
 o.shortmess =
-"acA"                   -- avoid hit-enter prompts, a = abbreviation without loss, c = avoid showing message extra message when using completion, A = don't give the "ATTENTION" message when an existing swap file is found.
+"acAF"                  -- avoid hit-enter prompts, a = abbreviation without loss, c = avoid showing message extra message when using completion, A = don't give the "ATTENTION" message when an existing swap file is found, F = don't give the file info when editing a file.
 o.updatetime = 300      -- time (ms) to save in swap.  You will have bad experience for diagnostic messages when it's default 4000.
 o.signcolumn = "yes"    -- column for error signs
 o.showcmd = true        -- show commands in the last line off screen
-o.cmdheight = 2         -- better display for messages
+o.cmdheight = 1         -- needs >0 to not ask for interaction when displaying messages
 o.scrolloff = 3         -- centers the cursor when moving
 -- give us a realtime preview of substitution before we send it "set list " show formating characters
 o.inccommand = "nosplit"
 o.lcs = "eol:\194\172,extends:\226\157\175,precedes:\226\157\174,tab:>-" -- the formating characters
+
+-- enables virtual text/lines diagnostic to only current line
+vim.diagnostic.config({
+  virtual_text = { current_line = true },
+  --virtual_lines = { current_line = true },
+})
 
 -- StatusLine
 -- F to full name
@@ -191,9 +197,9 @@ nnoremap("<c-tab>", ":retab<cr>", "tabs to spaces")
 
 -- Open terminal
 --nnoremap("<leader>T", ":sp <Bar> :terminal<cr> <bar> i", "open terminal")
-nnoremap("<c-t>", ":botright terminal<cr> <bar> i", "open terminal")
+--nnoremap("<c-t>", ":botright terminal<cr> <bar> i", "open terminal")
 --tnoremap("<Esc>", "<C-\\><C-n>", "normal mode") -- NOTE: breaks ranger
-tnoremap("<c-up>", "<C-\\><C-n><c-w><c-k>", "navigate up")
+--tnoremap("<c-up>", "<C-\\><C-n><c-w><c-k>", "navigate up")
 
 -- Completion Menu --
 -- <C-i> - open

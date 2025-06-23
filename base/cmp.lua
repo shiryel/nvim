@@ -22,6 +22,7 @@ vim.api.nvim_create_autocmd('InsertCharPre', {
   callback = open_completion,
 })
 
+-- popup to show documentation preview
 vim.opt.completeopt = "menuone,noselect,noinsert,popup"
 vim.opt.pumheight = 15 -- keep the pum small
 

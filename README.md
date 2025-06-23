@@ -38,6 +38,7 @@ Configure with:
 | `<c-down>`         | navigate down                           | n    |
 | `<c-tab>`          | tabs to spaces                          | n    |
 | `<c-t>`            | open terminal                           | n    |
+| `<c-f>`            | format                                  | n, v |
 | `<Esc>`            | normal mode                             | t, i |
 | `<leader>e`        | ranger: open                            | n    |
 | `<leader>E<left>`  | ranger: open left                       | n    |
@@ -62,17 +63,19 @@ Configure with:
 | `<leader>:`        | commands history                        | n    |
 | `<leader>/`        | search history                          | n    |
 | `<leader>'`        | marks                                   | n    |
+| `<leader>?`        | code actions                            | n    |
 | `<leader>c`        | git changes                             | n    |
 | `<leader>gc`       | git commit log (project)                | n    |
 | `<leader>gb`       | git commit log (buffer)                 | n    |
 | `<leader>gt`       | git branches                            | n    |
 | `<leader>gs`       | git status                              | n    |
 | `<leader>gS`       | git stash                               | n    |
-| `<c-f>`            | format                                  | n, v |
 | `ga`               | go-to any LSP location (combined view)  | n    |
 | `gd`               | go to definition                        | n    |
 | `gD`               | go to declaration                       | n    |
-| `gr`               | go to type definition                   | n    |
+| `gt`               | go to type definition                   | n    |
+| `gr`               | list references to symbol               | n    |
+| `<leader>i`        | list symbol's implementations           | n    |
 | `<leader>r`        | rename all references                   | n    |
 | `<leader>h`        | show symbol info                        | n    |
 | `<leader>H`        | show symbol signature                   | n    |
@@ -123,10 +126,10 @@ Configure with:
 | `<leader>c`   | pick color                                 | n    |
 | `<c-a>`       | harpoon: add to list                       | n    |
 | `<c-s>`       | harpoon: toggle list                       | n    |
-| `<c-5>`       | harpoon: select 1 from list                | n    |
-| `<c-5>`       | harpoon: select 2 from list                | n    |
-| `<c-5>`       | harpoon: select 3 from list                | n    |
-| `<c-5>`       | harpoon: select 4 from list                | n    |
+| `<c-1>`       | harpoon: select 1 from list                | n    |
+| `<c-2>`       | harpoon: select 2 from list                | n    |
+| `<c-3>`       | harpoon: select 3 from list                | n    |
+| `<c-4>`       | harpoon: select 4 from list                | n    |
 | `<c-5>`       | harpoon: select 5 from list                | n    |
 | `<c-q>`       | harpoon: toggle to previous buffer on list | n    |
 | `<c-d>`       | harpoon: toggle to next buffer on list     | n    |

@@ -49,8 +49,12 @@ cmp.setup({
     completion = cmp.config.window.bordered(),
     documentation = cmp.config.window.bordered()
   },
-  view = {
-    entries = "custom" -- can be "custom", "wildmenu" or "native"
+  --view = {
+  --  entries = 'native' -- can be "custom", "wildmenu" or "native"
+  --},
+  experimental = {
+    ghost_text = false,
+    native_menu = false,
   },
   mapping = cmp.mapping.preset.insert({
     ["<Tab>"] = cmp.mapping(function(fallback)

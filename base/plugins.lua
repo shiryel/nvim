@@ -1,5 +1,4 @@
 local fn = vim.fn
-local cmd = vim.cmd
 
 local function nnoremap(bind, command, desc)
   return vim.keymap.set("n", bind, command, { noremap = true, silent = true, desc = desc })
@@ -43,7 +42,7 @@ require("nvim-treesitter.configs").setup({
     enable = true,
     additional_vim_regex_highlighting = { "kotlin" },
     -- some files are too big for treesitter to work...
-    disable = function(lang, bufnr)
+    disable = function(_, bufnr)
       -- ignore if > 1mb (size in bytes)
       return (fn.getfsize(bufnr) > 1000000) or false
     end
@@ -65,6 +64,10 @@ require("nvim-treesitter.configs").setup({
     disable = { "gdscript", "elixir" } -- gdscript ident dont work
   }
 })
+
+require("shade").setup()
+
+require("lightbulb").setup()
 
 -- ranger
 local ranger = require("ranger")

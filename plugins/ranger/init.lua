@@ -144,7 +144,12 @@ local function open_win()
   local col = math.floor((ui.width - win_width) / 2 + 0.5)
 
   local buf = vim.api.nvim_create_buf(false, true)
-  local win = vim.api.nvim_open_win(buf, true, {
+
+  -- if ranger cmd is open -> close, otherwise, exits ranger
+  vim.keymap.set('t', '<c-c>', '<c-c>q', { noremap = true, nowait = true, buffer = buf })
+  vim.keymap.set('t', '<esc>', '<c-c>q', { noremap = true, nowait = true, buffer = buf })
+
+  vim.api.nvim_open_win(buf, true, {
     relative = "editor",
     focusable = true,
     anchor = "NW",

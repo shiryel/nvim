@@ -3,15 +3,75 @@ local function nnoremap(bind, command, desc)
   return vim.keymap.set("n", bind, command, { noremap = true, silent = true, desc = desc })
 end
 
--- kanagawa
-
-require('kanagawa').setup({
-  undercurl = false,
-  colors = {
-    theme = { all = { diag = { error = "#727169" } } }, -- fujiGray
-  }
+require("noice").setup({
+  lsp = {
+    -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
+    override = {
+      ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+      ["vim.lsp.util.stylize_markdown"] = true,
+      ["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
+    },
+    progress = { enabled = true },
+    message = { enabled = true },
+  },
+  --routes = {
+  --  {
+  --    filter = {
+  --      event = "msg_show",
+  --      kind = "",
+  --      find = "written",
+  --    },
+  --    opts = { skip = true },
+  --  },
+  --},
+  -- to disable messages, see: :h shortmess or :h report
+  messages = {
+    enabled = false,             -- enables the Noice messages UI
+    view = "notify",             -- default view for messages
+    view_error = "notify",       -- view for errors
+    view_warn = "notify",        -- view for warnings
+    view_history = "messages",   -- view for :messages
+    view_search = "virtualtext", -- view for search count messages. Set to `false` to disable
+  },
+  views = {
+    cmdline_popup = {
+      position = {
+        row = "48%",
+        col = "50%",
+      },
+      size = {
+        width = 60,
+        height = "auto",
+      },
+    },
+    popupmenu = {
+      relative = "editor",
+      position = {
+        row = "52%",
+        col = "50%",
+      },
+      size = {
+        width = 60,
+        height = 10,
+      },
+      border = {
+        style = "rounded",
+        padding = { 0, 1 },
+      },
+      win_options = {
+        winhighlight = { Normal = "Normal", FloatBorder = "DiagnosticInfo" },
+      },
+    },
+  },
+  -- you can enable a preset for easier configuration
+  presets = {
+    lsp_doc_border = true, -- add a border to hover docs and signature help
+    --command_palette = true,       -- position the cmdline and popupmenu together
+    --bottom_search = true,         -- use a classic bottom cmdline for search
+    --long_message_to_split = true, -- long messages will be sent to a split
+    --inc_rename = false,           -- enables an input dialog for inc-rename.nvim
+  },
 })
-vim.cmd("colorscheme kanagawa-wave")
 
 -- codecompanion-nvim
 
@@ -65,35 +125,28 @@ require("aerial").setup({
   end,
 })
 
--- persisted
-vim.o.sessionoptions = "buffers,curdir,folds,help,globals,tabpages,winpos,winsize,terminal"
-require("persisted").setup({
-  autostart = true,
-
-  follow_cwd = true,     -- Change the session file to match any change in the cwd?
-  use_git_branch = true, -- Include the git branch in the session file name?
-  autoload = true,       -- Automatically load the session for the cwd on Neovim startup?
-  autosave = true,
-
-  -- Function to run when `autoload = true` but there is no session to load
-  ---@type fun(): any
-  on_autoload_no_session = function() end,
-
-  allowed_dirs = { "~/code" }, -- Table of dirs that the plugin will start and autoload from
-  ignored_dirs = {},           -- Table of dirs that are ignored for starting and autoloading
-
-  --telescope = {
-  --  mappings = { -- Mappings for managing sessions in Telescope
-  --    copy_session = "<C-c>",
-  --    change_branch = "<C-b>",
-  --    delete_session = "<C-d>",
-  --  },
-  --  icons = { -- icons displayed in the Telescope picker
-  --    selected = " ",
-  --    dir = "  ",
-  --    branch = " ",
-  --  },
-  --},
+-- auto-session
+--
+-- test with debug on and `:=require('auto-session').AutoSaveSession()`
+-- or
+-- autocmd VimLeave * :call system("date >> ~/ts_vimleave.txt")
+--
+-- Does not work with bwrap's --unshare-pid, see:
+-- - https://github.com/containers/bubblewrap/issues/369
+-- - https://github.com/containers/bubblewrap/pull/586
+vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
+require("auto-session").setup({
+  enabled = true,                                   -- Enables/disables auto creating, saving and restoring
+  root_dir = vim.fn.stdpath "data" .. "/sessions/", -- Root dir where sessions will be stored
+  auto_save = true,                                 -- Enables/disables auto saving session on exit
+  auto_restore = true,                              -- Enables/disables auto restoring session on start
+  auto_create = true,                               -- Enables/disables auto creating new session files. Can take a function that should return true/false if a new session file should be created or not
+  allowed_dirs = { "~/code/*" },                    -- Allow session restore/create in certain directories
+  git_use_branch_name = true,                       -- Include git branch name in session name
+  git_auto_restore_on_branch_change = true,         -- Should we auto-restore the session when the git branch changes. Requires git_use_branch_name
+  lsp_stop_on_restore = true,                       -- Should language servers be stopped when restoring a session. Can also be a function that will be called if set. Not called on autorestore from startup
+  purge_after_minutes = 14400,                      -- Sessions older than purge_after_minutes will be deleted asynchronously on startup, e.g. set to 14400 to delete sessions that haven't been accessed for more than 10 days, defaults to off (no purging), requires >= nvim 0.10
+  --log_level = 'debug'
 })
 
 -- mini-nvim
@@ -279,3 +332,37 @@ require('orgmode').setup({
   org_agenda_files = '~/orgfiles/**/*',
   org_default_notes_file = '~/orgfiles/refile.org',
 })
+
+-- nvim-macros
+-- Usage:
+-- :MacroYank [register]: Yanks a macro from a register. If you don't specify, it'll politely ask you to choose one.
+-- :MacroSave [register]: Saves a macro into the book of legends (aka your JSON file). It'll prompt for a register if you're feeling indecisive.
+-- :MacroSelect: Brings up your macro menu. Pick one, and it'll be ready for action.
+-- :MacroDelete: Summon a list of your macros, then select one to permanently vanish it from your collection, as if it never existed.
+require('nvim-macros').setup({
+  json_file_path = vim.fs.normalize(vim.fn.stdpath("config") .. "/macros.json"), -- Location where the macros will be stored
+  default_macro_register = "q",                                                  -- Use as default register for :MacroYank and :MacroSave and :MacroSelect Raw functions
+  json_formatter = "none",                                                       -- can be "none" | "jq" | "yq" used to pretty print the json file (jq or yq must be installed!)
+})
+
+-- replaces vim.lsp.inlay_hint.enable(true)
+-- (shows types / parameter names at the end of line instead of on the middle of the code)
+require("lsp-endhints").setup {
+  icons = {
+    type = "󰜁 ",
+    parameter = "󰏪 ",
+    offspec = " ", -- hint kind not defined in official LSP spec
+    unknown = " ", -- hint kind is nil
+  },
+  label = {
+    truncateAtChars = 20,
+    padding = 1,
+    marginLeft = 0,
+    sameKindSeparator = ", ",
+  },
+  extmark = {
+    priority = 50,
+  },
+  autoEnableHints = true,
+}
+require("lsp-endhints").enable()
