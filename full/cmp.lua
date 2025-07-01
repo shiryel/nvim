@@ -1,11 +1,69 @@
 local cmp = require("cmp")
 local luasnip = require("luasnip")
 
-cmp.setup.cmdline('/', {
+local cmp_next = cmp.mapping(function(fallback)
+  if luasnip.locally_jumpable(1) then
+    luasnip.jump(1)
+  elseif cmp.visible() then
+    cmp.select_next_item()
+  else
+    fallback()
+  end
+end, { "i", "s", "c" })
+
+local cmp_previous = cmp.mapping(function(fallback)
+  if luasnip.locally_jumpable(-1) then
+    luasnip.jump(-1)
+  elseif cmp.visible() then
+    cmp.select_prev_item()
+  else
+    fallback()
+  end
+end, { "i", "s", "c" })
+
+local mapping = cmp.mapping.preset.insert({
+  ["<Tab>"] = cmp_next,
+  ["<Down>"] = cmp_next,
+  ["<S-Tab>"] = cmp_previous,
+  ["<Up>"] = cmp_previous,
+  ["<CR>"] = cmp.mapping(function(fallback)
+    if cmp.visible() then
+      if luasnip.expandable() then
+        --luasnip.expand()
+        cmp.confirm({ select = true })
+      else
+        cmp.confirm({ select = true })
+      end
+    else
+      fallback()
+    end
+  end),
+  ['<C-e>'] = cmp.mapping.abort(),
+  ['<C-up>'] = cmp.mapping.scroll_docs(-4),
+  ['<C-down>'] = cmp.mapping.scroll_docs(4),
+  ["<C-tab>"] = cmp.mapping.complete(),
+})
+
+cmp.setup.cmdline({ '/', '?' }, {
+  mapping = mapping,
   sources = cmp.config.sources({
     { name = 'nvim_lsp_document_symbol' }
   }, {
     { name = 'buffer' }
+  })
+})
+
+cmp.setup.cmdline(':', {
+  mapping = mapping,
+  sources = cmp.config.sources({
+    { name = 'path' }
+  }, {
+    {
+      name = 'cmdline',
+      option = {
+        ignore_cmds = { 'Man', '!' }
+      }
+    }
   })
 })
 
@@ -56,42 +114,7 @@ cmp.setup({
     ghost_text = false,
     native_menu = false,
   },
-  mapping = cmp.mapping.preset.insert({
-    ["<Tab>"] = cmp.mapping(function(fallback)
-      if luasnip.locally_jumpable(1) then
-        luasnip.jump(1)
-      elseif cmp.visible() then
-        cmp.select_next_item()
-      else
-        fallback()
-      end
-    end, { "i", "s" }),
-    ["<S-Tab>"] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_prev_item()
-      elseif luasnip.locally_jumpable(-1) then
-        luasnip.jump(-1)
-      else
-        fallback()
-      end
-    end, { "i", "s" }),
-    ["<CR>"] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        if luasnip.expandable() then
-          --luasnip.expand()
-          cmp.confirm({ select = true })
-        else
-          cmp.confirm({ select = true })
-        end
-      else
-        fallback()
-      end
-    end),
-    ['<C-up>'] = cmp.mapping.scroll_docs(-4),
-    ['<C-down>'] = cmp.mapping.scroll_docs(4),
-    ["<C-tab>"] = cmp.mapping.complete(),
-    -- ['<C-c>'] = cmp.mapping.abort(),
-  }),
+  mapping = mapping,
   sources = cmp.config.sources({
       { name = 'nvim_lsp_signature_help' },
       { name = "nvim_lsp" },
