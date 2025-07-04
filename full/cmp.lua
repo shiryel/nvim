@@ -97,6 +97,7 @@ local kind_icons = {
 }
 
 cmp.setup({
+  preselect = cmp.PreselectMode.None,
   snippet = {
     expand = function(args)
       -- NOTE: Nvim has native snippets, but they are minimal, made to only support the LSP snippets
