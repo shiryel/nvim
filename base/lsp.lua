@@ -495,7 +495,7 @@ vim.lsp.config.rust_analyzer = {
   -- https://github.com/rust-lang/rust-analyzer/blob/master/docs/user/generated_config.adoc
   settings = {
     ["rust-analyzer"] = {
-      checkOnSave = false,
+      checkOnSave = true,
       completion = {
         privateEditable = {
           enable = true
