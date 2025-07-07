@@ -333,6 +333,32 @@ require('orgmode').setup({
   org_default_notes_file = '~/orgfiles/refile.org',
 })
 
+-- markview-nvim
+require("markview").setup {
+  preview = {
+    enable = true,
+    icon_provider = "devicons",
+  },
+  html = {
+    enable = true,
+  },
+  latex = {
+    enable = true,
+  },
+  markdown = {
+    enable = true,
+  },
+  markdown_inline = {
+    enable = true,
+  },
+  typst = {
+    enable = true,
+  },
+  yaml = {
+    enable = true,
+  }
+}
+
 -- nvim-macros
 -- Usage:
 -- :MacroYank [register]: Yanks a macro from a register. If you don't specify, it'll politely ask you to choose one.
@@ -365,4 +391,3 @@ require("lsp-endhints").setup {
   },
   autoEnableHints = true,
 }
-require("lsp-endhints").enable()

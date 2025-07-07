@@ -104,6 +104,7 @@ let
     which-key-nvim
     ccc-nvim
     orgmode
+    markview-nvim
     _nvim-macros
     _nvim-lsp-endhints
   ];
