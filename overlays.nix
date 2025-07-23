@@ -61,6 +61,7 @@ let
 
     # LSP
     aerial-nvim
+    nvim-lspconfig # for Lsp* commands only
     #flutter-tools-nvim # sets up dartls + flutter utils
 
     # COMPLETION
