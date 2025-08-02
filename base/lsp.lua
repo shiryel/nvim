@@ -262,9 +262,9 @@ end
 
 -- Get additional info when using cmp-nvim
 local capabilities = vim.lsp.protocol.make_client_capabilities()
-local ok, cmp_nvim_lsp = pcall(require, 'cmp_nvim_lsp')
+local ok, blink = pcall(require, 'blink.cmp')
 if ok then
-  capabilities = cmp_nvim_lsp.default_capabilities()
+  capabilities = blink.get_lsp_capabilities()
 end
 
 vim.lsp.config('*', {

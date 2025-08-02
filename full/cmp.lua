@@ -1,159 +1,79 @@
-local cmp = require("cmp")
-local luasnip = require("luasnip")
+local blink = require("blink.cmp")
 
-local cmp_next = cmp.mapping(function(fallback)
-  if luasnip.locally_jumpable(1) then
-    luasnip.jump(1)
-  elseif cmp.visible() then
-    cmp.select_next_item()
-  else
-    fallback()
-  end
-end, { "i", "s", "c" })
-
-local cmp_previous = cmp.mapping(function(fallback)
-  if luasnip.locally_jumpable(-1) then
-    luasnip.jump(-1)
-  elseif cmp.visible() then
-    cmp.select_prev_item()
-  else
-    fallback()
-  end
-end, { "i", "s", "c" })
-
-local mapping = cmp.mapping.preset.insert({
-  ["<Tab>"] = cmp_next,
-  ["<Down>"] = cmp_next,
-  ["<S-Tab>"] = cmp_previous,
-  ["<Up>"] = cmp_previous,
-  ["<CR>"] = cmp.mapping(function(fallback)
-    if cmp.visible() then
-      if luasnip.expandable() then
-        --luasnip.expand()
-        cmp.confirm({ select = true })
-      else
-        cmp.confirm({ select = true })
-      end
-    else
-      fallback()
-    end
-  end),
-  ['<C-e>'] = cmp.mapping.abort(),
-  ['<C-up>'] = cmp.mapping.scroll_docs(-4),
-  ['<C-down>'] = cmp.mapping.scroll_docs(4),
-  ["<C-tab>"] = cmp.mapping.complete(),
-})
-
-cmp.setup.cmdline({ '/', '?' }, {
-  mapping = mapping,
-  sources = cmp.config.sources({
-    { name = 'nvim_lsp_document_symbol' }
-  }, {
-    { name = 'buffer' }
-  })
-})
-
-cmp.setup.cmdline(':', {
-  mapping = mapping,
-  sources = cmp.config.sources({
-    { name = 'path' }
-  }, {
-    {
-      name = 'cmdline',
-      option = {
-        ignore_cmds = { 'Man', '!' }
-      }
-    }
-  })
-})
-
--- Icons for CMP
-local kind_icons = {
-  Text = "",
-  Function = "󰊕",
-  Method = "󰡱",
-  Constructor = "",
-  Field = "",
-  Variable = "",
-  Class = "",
-  Interface = "",
-  Module = "",
-  Property = "",
-  Unit = "",
-  Value = "󰀬",
-  Enum = "",
-  EnumMember = "",
-  Keyword = "",
-  Snippet = "",
-  Color = "",
-  File = "",
-  Reference = "",
-  Folder = "",
-  Constant = "",
-  Struct = "",
-  Event = "",
-  Operator = "",
-  TypeParameter = ""
-}
-
-cmp.setup({
-  preselect = cmp.PreselectMode.None,
-  snippet = {
-    expand = function(args)
-      -- NOTE: Nvim has native snippets, but they are minimal, made to only support the LSP snippets
-      require('luasnip').lsp_expand(args.body)
-    end
+blink.setup({
+  -- 'default' (recommended) for mappings similar to built-in completions (C-y to accept)
+  -- 'super-tab' for mappings similar to vscode (tab to accept)
+  -- 'enter' for enter to accept
+  -- 'none' for no mappings
+  --
+  -- All presets have the following mappings:
+  -- C-space: Open menu or open docs if already open
+  -- C-n/C-p or Up/Down: Select next/previous item
+  -- C-e: Hide menu
+  -- C-k: Toggle signature help (if signature.enabled = true)
+  --
+  -- See :h blink-cmp-config-keymap for defining your own keymap
+  keymap = {
+    preset = 'enter',
+    ['<C-tab>'] = { function(cmp) cmp.show() end },
+    ['<C-space>'] = { function(cmp) cmp.show({ providers = { 'snippets' } }) end },
   },
-  window = {
-    completion = cmp.config.window.bordered(),
-    documentation = cmp.config.window.bordered()
+
+  appearance = {
+    -- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
+    -- Adjusts spacing to ensure icons are aligned
+    nerd_font_variant = 'mono'
   },
-  --view = {
-  --  entries = 'native' -- can be "custom", "wildmenu" or "native"
-  --},
-  experimental = {
-    ghost_text = false,
-    native_menu = false,
-  },
-  mapping = mapping,
-  sources = cmp.config.sources({
-      { name = 'nvim_lsp_signature_help' },
-      { name = "nvim_lsp" },
-      { name = "luasnip" }, --, option = { show_autosnippets = true }
-      { name = 'buffer' },
-      { name = 'path' },
-      --{ name = 'omni' },
-      { name = 'nvim_lua' }
+
+  completion = {
+    -- Don't select by default, auto insert on selection
+    list = { selection = { preselect = false, auto_insert = true } },
+    -- Display a preview of the selected item on the current line
+    ghost_text = { enabled = true },
+    -- Show the documentation popup when manually triggered
+    documentation = {
+      auto_show = true,
+      auto_show_delay_ms = 60,
     },
-    { { name = "buffer" } }
-  ),
-  formatting = {
-    format = function(entry, vim_item)
-      -- Source
-      vim_item.menu = ({
-        buffer = "[Buffer]",
-        nvim_lsp = "[LSP]",
-        luasnip = "[LuaSnip]",
-        nvim_lua = "[Lua]",
-        latex_symbols = "[LaTeX]",
-      })[entry.source.name]
+    -- 'full' will fuzzy match on the text before _and_ after the cursor
+    -- example: 'foo_|_bar' will match 'foo_' for 'prefix' and 'foo__bar' for 'full'
+    keyword = { range = 'full' },
+  },
 
-      if vim_item.kind == 'Color' and entry.completion_item.documentation then
-        local hex = string.sub(entry.completion_item.documentation, 2)
-        if hex then
-          local group = 'Tw_' .. hex
-          if vim.fn.hlID(group) < 1 then
-            vim.api.nvim_set_hl(0, group, { fg = '#' .. hex })
+  -- loads friendly-snippets
+  snippets = { preset = 'default' },
+
+  signature = { enabled = true },
+
+  sources = {
+    -- Default list of enabled providers defined so that you can extend it
+    -- elsewhere in your config, without redefining it, due to `opts_extend`
+    default = { 'lsp', 'path', 'snippets', 'buffer' },
+
+    providers = {
+      -- Get completion from all "normal" buffers open
+      buffer = {
+        opts = {
+          get_bufnrs = function()
+            return vim.tbl_filter(function(bufnr)
+              return vim.bo[bufnr].buftype == ''
+            end, vim.api.nvim_list_bufs())
           end
-          vim_item.kind = "■ Color" -- or "⬤" or anything
-          vim_item.kind_hl_group = group
-        end
-      else
-        -- Kind icons
-        vim_item.kind = string.format('%s %s', kind_icons[vim_item.kind], vim_item.kind)
-      end
+        }
+      },
+      -- Path completion from cwd instead of current buffer's directory
+      path = {
+        opts = {
+          get_cwd = function(_)
+            return vim.fn.getcwd()
+          end,
+        },
+      },
+    }
+  },
 
-      return vim_item
-    end
-  }
+  -- (Default) Rust fuzzy matcher for typo resistance and significantly better performance
+  -- You may use a lua implementation instead by using `implementation = "lua"` or fallback to the lua implementation,
+  -- when the Rust fuzzy matcher is not available, by using `implementation = "prefer_rust"`
+  fuzzy = { implementation = "prefer_rust_with_warning" },
 })

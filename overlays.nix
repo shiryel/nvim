@@ -14,10 +14,6 @@ let
     doCheck = false;
   };
 
-  _ranger = mkSelfPlugin "ranger";
-  _shade = mkSelfPlugin "shade";
-  _lightbulb = mkSelfPlugin "lightbulb";
-
   _nvim-macros = prev.vimUtils.buildVimPlugin {
     pname = "nvim-macros";
     version = "git";
@@ -42,14 +38,14 @@ let
 
   base_plugins = with final.vimPlugins; [
     # NAVIGATION
-    _ranger
+    (mkSelfPlugin "ranger")
     fzf-lua
 
     # LSP
-    _lightbulb
+    (mkSelfPlugin "lightbulb")
 
     # EXTRA
-    _shade
+    (mkSelfPlugin "shade")
   ];
 
   full_plugins = with final.vimPlugins; [
@@ -65,18 +61,7 @@ let
     #flutter-tools-nvim # sets up dartls + flutter utils
 
     # COMPLETION
-    nvim-cmp
-    cmp-nvim-lsp
-    cmp-nvim-lsp-document-symbol # type of the symbol
-    cmp-nvim-lsp-signature-help # params autocompletion
-    cmp-nvim-lua # lua completion
-    cmp-buffer
-    cmp-path
-    cmp_luasnip
-    cmp-cmdline
-    #cmp-omni
-    #kotlin-vim
-    #nvim-treesitter-textobjects
+    blink-cmp
 
     # SNIPPET
     luasnip
