@@ -36,6 +36,18 @@ let
     };
   };
 
+  _nvim-spelunk = prev.vimUtils.buildVimPlugin {
+    pname = "spelunk.nvim";
+    version = "git";
+    src = prev.fetchFromGitHub {
+      owner = "EvWilson";
+      repo = "spelunk.nvim";
+      rev = "553674609390156fb9d271f66fa501a1616e4052";
+      sha256 = "sha256-x2XsEtA94EGzpkX3D9w6JpdPUAUJiyyI47El54Acwic=";
+    };
+    dependencies = [ final.vimPlugins.plenary-nvim ];
+  };
+
   base_plugins = with final.vimPlugins; [
     # NAVIGATION
     (mkSelfPlugin "ranger")
@@ -76,7 +88,7 @@ let
     diffview-nvim
 
     # NAVIGATION
-    harpoon2
+    _nvim-spelunk
     nvim-web-devicons
     #nvim-tree-lua
     #telescope-nvim

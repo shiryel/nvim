@@ -124,15 +124,10 @@ Configure with:
 | `<leader>dur` | DAP UI reset                               | n    |
 | `<leader>due` | DAP UI eval                                | n    |
 | `<leader>c`   | pick color                                 | n    |
-| `<c-a>`       | harpoon: add to list                       | n    |
-| `<c-s>`       | harpoon: toggle list                       | n    |
-| `<c-1>`       | harpoon: select 1 from list                | n    |
-| `<c-2>`       | harpoon: select 2 from list                | n    |
-| `<c-3>`       | harpoon: select 3 from list                | n    |
-| `<c-4>`       | harpoon: select 4 from list                | n    |
-| `<c-5>`       | harpoon: select 5 from list                | n    |
-| `<c-q>`       | harpoon: toggle to previous buffer on list | n    |
-| `<c-d>`       | harpoon: toggle to next buffer on list     | n    |
+| `<c-a>`       | spelunk: add to list                       | n    |
+| `<c-s>`       | spelunk: toggle list                       | n    |
+| `<c-h>`       | spelunk: next bookmark                     | n    |
+| `<c-t>`       | spelunk: previous bookmark                 | n    |
 | `<leader>A`   | toggle aerial                              | n    |
 | `[[`          | aerial: next                               | n    |
 | `]]`          | aerial: prev                               | n    |

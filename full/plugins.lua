@@ -229,19 +229,63 @@ require('mini.indentscope').setup({
 -- nnoremap("<leader>e", ":NvimTreeFindFile<cr>", "open file tree")
 -- nnoremap("<leader>E", ":NvimTreeToggle<cr>", "toggle file tree")
 
--- harpoon2
-require("harpoon"):setup()
+-- spelunk
+require("spelunk").setup({
+  base_mappings = {
+    -- Toggle the UI open/closed
+    toggle = '<c-s>',
+    -- Add a bookmark to the current stack
+    add = '<c-a>',
+    -- Move to the next bookmark in the stack
+    next_bookmark = '<c-h>',
+    -- Move to the previous bookmark in the stack
+    prev_bookmark = '<c-t>',
 
-local harpoon = require("harpoon")
-nnoremap("<c-a>", function() harpoon:list():add() end, "harpoon: add to list")
-nnoremap("<c-s>", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, "harpoon: toggle list")
-nnoremap("<c-1>", function() harpoon:list():select(1) end, "harpoon: select 1 from list")
-nnoremap("<c-2>", function() harpoon:list():select(2) end, "harpoon: select 2 from list")
-nnoremap("<c-3>", function() harpoon:list():select(3) end, "harpoon: select 3 from list")
-nnoremap("<c-4>", function() harpoon:list():select(4) end, "harpoon: select 4 from list")
-nnoremap("<c-5>", function() harpoon:list():select(5) end, "harpoon: select 5 from list")
-nnoremap("<c-q>", function() harpoon:list():prev() end, "harpoon: toggle to previous buffer on list")
-nnoremap("<c-d>", function() harpoon:list():next() end, "harpoon: toggle to next buffer on list")
+    -- requires telescope:
+
+    -- Fuzzy-find all bookmarks
+    search_bookmarks = nil,
+    -- Fuzzy-find bookmarks in current stack
+    search_current_bookmarks = nil,
+    -- Fuzzy find all stacks
+    search_stacks = nil,
+  },
+  window_mappings = {
+    -- Move the UI cursor down
+    cursor_down = '<down>',
+    -- Move the UI cursor up
+    cursor_up = '<up>',
+    -- Move the current bookmark down in the stack
+    bookmark_down = '<C-down>',
+    -- Move the current bookmark up in the stack
+    bookmark_up = '<C-up>',
+    -- Jump to the selected bookmark
+    goto_bookmark = '<CR>',
+    -- Jump to the selected bookmark in a new vertical split
+    goto_bookmark_hsplit = 'h',
+    -- Jump to the selected bookmark in a new horizontal split
+    goto_bookmark_vsplit = 'v',
+    -- Delete the selected bookmark
+    delete_bookmark = 'd',
+    -- Navigate to the next stack
+    next_stack = '<Tab>',
+    -- Navigate to the previous stack
+    previous_stack = '<S-Tab>',
+    -- Create a new stack
+    new_stack = 'n',
+    -- Delete the current stack
+    delete_stack = 'D',
+    -- Rename the current stack
+    edit_stack = 'E',
+    -- Close the UI
+    close = 'q',
+    -- Open the help menu
+    help = 'h',
+  },
+  enable_persist = true,
+  enable_status_col_display = true,
+  persist_by_git_branch = true,
+})
 
 -- luasnip
 -- see: https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md#loaders
