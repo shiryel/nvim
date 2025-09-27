@@ -273,8 +273,8 @@ vim.lsp.config('*', {
 })
 
 -- ELIXIR
-vim.lsp.config.elixirls = {
-  cmd = { "elixir-ls" },
+vim.lsp.config.expert = {
+  cmd = { "expert" },
   filetypes = { 'elixir', 'eelixir', 'heex', 'surface' },
   root_dir = function(bufnr, cb)
     local fname = vim.api.nvim_buf_get_name(bufnr)
@@ -782,7 +782,7 @@ vim.lsp.config.dartls = {
 -- defaults to works as if `single_file_support = true`
 -- see: https://github.com/neovim/neovim/issues/31762
 vim.lsp.enable({
-  'elixirls',
+  'expert',
   'tailwindcss',
   'gdscript',
   'efm',
