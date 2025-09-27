@@ -274,6 +274,7 @@ vim.lsp.config('*', {
 
 -- ELIXIR
 vim.lsp.config.elixirls = {
+  --cmd = { "expert" },
   cmd = { "elixir-ls" },
   filetypes = { 'elixir', 'eelixir', 'heex', 'surface' },
   root_dir = function(bufnr, cb)

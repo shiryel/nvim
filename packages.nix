@@ -36,6 +36,7 @@
     # Language servers
     efm-langserver # General Purpose LSP
     elixir-ls # Elixir
+    #elixir-expert-lsp # Elixir
     tailwindcss-language-server # TailwindCSS
     #nixd # Nix
     nil # Nix
