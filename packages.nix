@@ -42,6 +42,7 @@
     #ccls # GCC
     zls # Zig
     rust-analyzer # Rust
+    wgsl-analyzer # WGSL / WESL
     #python39Packages.gdtoolkit # GDScript
     #python310Packages.python-lsp-server # pylsp
     nodePackages.svelte-language-server

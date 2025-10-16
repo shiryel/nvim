@@ -112,9 +112,9 @@ vim.api.nvim_create_autocmd('LspAttach', {
       noremap("gD", b.declaration, "go to declaration")
     end
 
-    if client:supports_method('textDocument/typeDefinition') then
-      noremap("gt", b.type_definition, "go to type definition")
-    end
+    --if client:supports_method('textDocument/typeDefinition') then
+    --  noremap("gt", b.type_definition, "go to type definition")
+    --end
 
     ----------------
     -- COMPLETION --
@@ -536,6 +536,140 @@ vim.lsp.config.rust_analyzer = {
   },
 }
 
+-- WGSL / WESL
+vim.lsp.config.wgsl_analyzer = {
+  cmd = { "wgsl-analyzer" },
+  filetypes = { 'wgsl', 'wesl' },
+  root_markers = { '.git' },
+  -- https://github.com/wgsl-analyzer/wgsl-analyzer/blob/main/editors/code/package.json
+  settings = {
+    ["wgsl-analyzer"] = {
+      diagnostics = {
+        typeErrors = false, -- crashes the LSP when using customImports
+        -- TODO: wait for support
+        nagaParsingErrors = true,
+        nagaValidationErrors = true,
+      },
+      -- GENERATED WITH
+      -- rg define_import_path -g '*.wgsl' --sort path | sd '^([^:]*):#define_import_path (.*)' ' ["$2"] = "file:///home/shiryel/code/bevy/$1",' >> wgsl_paths.txt
+      customImports = {
+        ["bevy_core_pipeline::fullscreen_vertex_shader"] =
+        "file:///home/shiryel/code/bevy/crates/bevy_core_pipeline/src/fullscreen_vertex_shader/fullscreen.wgsl",
+        ["bevy_core_pipeline::oit"] = "file:///home/shiryel/code/bevy/crates/bevy_core_pipeline/src/oit/oit_draw.wgsl",
+        ["bevy_core_pipeline::tonemapping_lut_bindings"] =
+        "file:///home/shiryel/code/bevy/crates/bevy_core_pipeline/src/tonemapping/lut_bindings.wgsl",
+        ["bevy_core_pipeline::tonemapping"] =
+        "file:///home/shiryel/code/bevy/crates/bevy_core_pipeline/src/tonemapping/tonemapping_shared.wgsl",
+        ["bevy_pbr::atmosphere::bindings"] =
+        "file:///home/shiryel/code/bevy/crates/bevy_pbr/src/atmosphere/bindings.wgsl",
+        ["bevy_pbr::atmosphere::bruneton_functions"] =
+        "file:///home/shiryel/code/bevy/crates/bevy_pbr/src/atmosphere/bruneton_functions.wgsl",
+        ["bevy_pbr::atmosphere::functions"] =
+        "file:///home/shiryel/code/bevy/crates/bevy_pbr/src/atmosphere/functions.wgsl",
+        ["bevy_pbr::atmosphere::types"] = "file:///home/shiryel/code/bevy/crates/bevy_pbr/src/atmosphere/types.wgsl",
+        ["bevy_pbr::decal::clustered"] = "file:///home/shiryel/code/bevy/crates/bevy_pbr/src/decal/clustered.wgsl",
+        ["bevy_pbr::decal::forward"] = "file:///home/shiryel/code/bevy/crates/bevy_pbr/src/decal/forward_decal.wgsl",
+        ["bevy_pbr::pbr_deferred_functions"] =
+        "file:///home/shiryel/code/bevy/crates/bevy_pbr/src/deferred/pbr_deferred_functions.wgsl",
+        ["bevy_pbr::pbr_deferred_types"] =
+        "file:///home/shiryel/code/bevy/crates/bevy_pbr/src/deferred/pbr_deferred_types.wgsl",
+        ["bevy_pbr::environment_map"] =
+        "file:///home/shiryel/code/bevy/crates/bevy_pbr/src/light_probe/environment_map.wgsl",
+        ["bevy_pbr::irradiance_volume"] =
+        "file:///home/shiryel/code/bevy/crates/bevy_pbr/src/light_probe/irradiance_volume.wgsl",
+        ["bevy_pbr::light_probe"] = "file:///home/shiryel/code/bevy/crates/bevy_pbr/src/light_probe/light_probe.wgsl",
+        ["bevy_pbr::lightmap"] = "file:///home/shiryel/code/bevy/crates/bevy_pbr/src/lightmap/lightmap.wgsl",
+        ["bevy_pbr::meshlet_bindings"] =
+        "file:///home/shiryel/code/bevy/crates/bevy_pbr/src/meshlet/meshlet_bindings.wgsl",
+        ["bevy_pbr::meshlet_cull_shared"] =
+        "file:///home/shiryel/code/bevy/crates/bevy_pbr/src/meshlet/meshlet_cull_shared.wgsl",
+        ["bevy_pbr::meshlet_visibility_buffer_resolve"] =
+        "file:///home/shiryel/code/bevy/crates/bevy_pbr/src/meshlet/visibility_buffer_resolve.wgsl",
+        ["bevy_pbr::prepass_bindings"] =
+        "file:///home/shiryel/code/bevy/crates/bevy_pbr/src/prepass/prepass_bindings.wgsl",
+        ["bevy_pbr::prepass_io"] = "file:///home/shiryel/code/bevy/crates/bevy_pbr/src/prepass/prepass_io.wgsl",
+        ["bevy_pbr::prepass_utils"] = "file:///home/shiryel/code/bevy/crates/bevy_pbr/src/prepass/prepass_utils.wgsl",
+        ["bevy_pbr::clustered_forward"] =
+        "file:///home/shiryel/code/bevy/crates/bevy_pbr/src/render/clustered_forward.wgsl",
+        ["bevy_pbr::fog"] = "file:///home/shiryel/code/bevy/crates/bevy_pbr/src/render/fog.wgsl",
+        ["bevy_pbr::forward_io"] = "file:///home/shiryel/code/bevy/crates/bevy_pbr/src/render/forward_io.wgsl",
+        ["bevy_pbr::mesh_bindings"] = "file:///home/shiryel/code/bevy/crates/bevy_pbr/src/render/mesh_bindings.wgsl",
+        ["bevy_pbr::mesh_functions"] = "file:///home/shiryel/code/bevy/crates/bevy_pbr/src/render/mesh_functions.wgsl",
+        ["bevy_pbr::mesh_types"] = "file:///home/shiryel/code/bevy/crates/bevy_pbr/src/render/mesh_types.wgsl",
+        ["bevy_pbr::mesh_view_bindings"] =
+        "file:///home/shiryel/code/bevy/crates/bevy_pbr/src/render/mesh_view_bindings.wgsl",
+        ["bevy_pbr::mesh_view_types"] = "file:///home/shiryel/code/bevy/crates/bevy_pbr/src/render/mesh_view_types.wgsl",
+        ["bevy_pbr::morph"] = "file:///home/shiryel/code/bevy/crates/bevy_pbr/src/render/morph.wgsl",
+        ["bevy_pbr::occlusion_culling"] =
+        "file:///home/shiryel/code/bevy/crates/bevy_pbr/src/render/occlusion_culling.wgsl",
+        ["bevy_pbr::parallax_mapping"] =
+        "file:///home/shiryel/code/bevy/crates/bevy_pbr/src/render/parallax_mapping.wgsl",
+        ["bevy_pbr::ambient"] = "file:///home/shiryel/code/bevy/crates/bevy_pbr/src/render/pbr_ambient.wgsl",
+        ["bevy_pbr::pbr_bindings"] = "file:///home/shiryel/code/bevy/crates/bevy_pbr/src/render/pbr_bindings.wgsl",
+        ["bevy_pbr::pbr_fragment"] = "file:///home/shiryel/code/bevy/crates/bevy_pbr/src/render/pbr_fragment.wgsl",
+        ["bevy_pbr::pbr_functions"] = "file:///home/shiryel/code/bevy/crates/bevy_pbr/src/render/pbr_functions.wgsl",
+        ["bevy_pbr::lighting"] = "file:///home/shiryel/code/bevy/crates/bevy_pbr/src/render/pbr_lighting.wgsl",
+        ["bevy_pbr::pbr_prepass_functions"] =
+        "file:///home/shiryel/code/bevy/crates/bevy_pbr/src/render/pbr_prepass_functions.wgsl",
+        ["bevy_pbr::transmission"] = "file:///home/shiryel/code/bevy/crates/bevy_pbr/src/render/pbr_transmission.wgsl",
+        ["bevy_pbr::pbr_types"] = "file:///home/shiryel/code/bevy/crates/bevy_pbr/src/render/pbr_types.wgsl",
+        ["bevy_pbr::rgb9e5"] = "file:///home/shiryel/code/bevy/crates/bevy_pbr/src/render/rgb9e5.wgsl",
+        ["bevy_pbr::shadow_sampling"] = "file:///home/shiryel/code/bevy/crates/bevy_pbr/src/render/shadow_sampling.wgsl",
+        ["bevy_pbr::shadows"] = "file:///home/shiryel/code/bevy/crates/bevy_pbr/src/render/shadows.wgsl",
+        ["bevy_pbr::skinning"] = "file:///home/shiryel/code/bevy/crates/bevy_pbr/src/render/skinning.wgsl",
+        ["bevy_pbr::utils"] = "file:///home/shiryel/code/bevy/crates/bevy_pbr/src/render/utils.wgsl",
+        ["bevy_pbr::view_transformations"] =
+        "file:///home/shiryel/code/bevy/crates/bevy_pbr/src/render/view_transformations.wgsl",
+        ["bevy_pbr::ssao_utils"] = "file:///home/shiryel/code/bevy/crates/bevy_pbr/src/ssao/ssao_utils.wgsl",
+        ["bevy_pbr::raymarch"] = "file:///home/shiryel/code/bevy/crates/bevy_pbr/src/ssr/raymarch.wgsl",
+        ["bevy_pbr::ssr"] = "file:///home/shiryel/code/bevy/crates/bevy_pbr/src/ssr/ssr.wgsl",
+        ["bevy_core_pipeline::post_processing::chromatic_aberration"] =
+        "file:///home/shiryel/code/bevy/crates/bevy_post_process/src/effect_stack/chromatic_aberration.wgsl",
+        ["bevy_render::bindless"] = "file:///home/shiryel/code/bevy/crates/bevy_render/src/bindless.wgsl",
+        ["bevy_render::color_operations"] = "file:///home/shiryel/code/bevy/crates/bevy_render/src/color_operations.wgsl",
+        ["bevy_pbr::mesh_preprocess_types"] =
+        "file:///home/shiryel/code/bevy/crates/bevy_render/src/experimental/occlusion_culling/mesh_preprocess_types.wgsl",
+        ["bevy_render::globals"] = "file:///home/shiryel/code/bevy/crates/bevy_render/src/globals.wgsl",
+        ["bevy_render::maths"] = "file:///home/shiryel/code/bevy/crates/bevy_render/src/maths.wgsl",
+        ["bevy_render::view"] = "file:///home/shiryel/code/bevy/crates/bevy_render/src/view/view.wgsl",
+        ["bevy_solari::gbuffer_utils"] =
+        "file:///home/shiryel/code/bevy/crates/bevy_solari/src/realtime/gbuffer_utils.wgsl",
+        ["bevy_solari::presample_light_tiles"] =
+        "file:///home/shiryel/code/bevy/crates/bevy_solari/src/realtime/presample_light_tiles.wgsl",
+        ["bevy_solari::world_cache"] =
+        "file:///home/shiryel/code/bevy/crates/bevy_solari/src/realtime/world_cache_query.wgsl",
+        ["bevy_solari::brdf"] = "file:///home/shiryel/code/bevy/crates/bevy_solari/src/scene/brdf.wgsl",
+        ["bevy_solari::scene_bindings"] =
+        "file:///home/shiryel/code/bevy/crates/bevy_solari/src/scene/raytracing_scene_bindings.wgsl",
+        ["bevy_solari::sampling"] = "file:///home/shiryel/code/bevy/crates/bevy_solari/src/scene/sampling.wgsl",
+        ["bevy_sprite::mesh2d_bindings"] =
+        "file:///home/shiryel/code/bevy/crates/bevy_sprite_render/src/mesh2d/mesh2d_bindings.wgsl",
+        ["bevy_sprite::mesh2d_functions"] =
+        "file:///home/shiryel/code/bevy/crates/bevy_sprite_render/src/mesh2d/mesh2d_functions.wgsl",
+        ["bevy_sprite::mesh2d_types"] =
+        "file:///home/shiryel/code/bevy/crates/bevy_sprite_render/src/mesh2d/mesh2d_types.wgsl",
+        ["bevy_sprite::mesh2d_vertex_output"] =
+        "file:///home/shiryel/code/bevy/crates/bevy_sprite_render/src/mesh2d/mesh2d_vertex_output.wgsl",
+        ["bevy_sprite::mesh2d_view_bindings"] =
+        "file:///home/shiryel/code/bevy/crates/bevy_sprite_render/src/mesh2d/mesh2d_view_bindings.wgsl",
+        ["bevy_sprite::mesh2d_view_types"] =
+        "file:///home/shiryel/code/bevy/crates/bevy_sprite_render/src/mesh2d/mesh2d_view_types.wgsl",
+        ["bevy_sprite::sprite_view_bindings"] =
+        "file:///home/shiryel/code/bevy/crates/bevy_sprite_render/src/render/sprite_view_bindings.wgsl",
+        ["bevy_ui::ui_node"] = "file:///home/shiryel/code/bevy/crates/bevy_ui_render/src/ui.wgsl",
+        ["bevy_ui::ui_vertex_output"] = "file:///home/shiryel/code/bevy/crates/bevy_ui_render/src/ui_vertex_output.wgsl",
+      },
+      inlayHints = {
+        enabled = true,
+        typeHints = true,
+        parameterHints = true,
+        structLayoutHints = true,
+        typeVerbosity = "full"
+      }
+    }
+  }
+}
+
 -- JS
 vim.lsp.config.eslint = {
   cmd = { 'vscode-eslint-language-server', '--stdio' },
@@ -656,9 +790,10 @@ vim.lsp.enable({
   'nil_ls',
   'clangd',
   'rust_analyzer',
+  'wgsl_analyzer',
   'eslint',
   'svelte',
   'tinymist',
   'terraformls',
-  'dartls',
+  --'dartls',
 })

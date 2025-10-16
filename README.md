@@ -73,7 +73,6 @@ Configure with:
 | `ga`               | go-to any LSP location (combined view)  | n    |
 | `gd`               | go to definition                        | n    |
 | `gD`               | go to declaration                       | n    |
-| `gt`               | go to type definition                   | n    |
 | `gr`               | list references to symbol               | n    |
 | `<leader>i`        | list symbol's implementations           | n    |
 | `<leader>r`        | rename all references                   | n    |

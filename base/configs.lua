@@ -216,6 +216,7 @@ c("au BufRead,BufNewFile *.ex set filetype=elixir")
 c("au BufRead,BufNewFile *.exs set filetype=elixir")
 c("au BufRead,BufNewFile *.slime set filetype=elixir")
 c("au BufRead,BufNewFile *.zig set filetype=zig")
+c("au BufRead,BufNewFile *.wesl set filetype=wgsl")
 
 c("au FileType elm set tabstop=4")
 c("au FileType elm set shiftwidth=4")

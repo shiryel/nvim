@@ -202,4 +202,20 @@ in
       };
     };
   });
+
+  # fix settings on nvim https://github.com/wgsl-analyzer/wgsl-analyzer/pull/549
+  wgsl-analyzer = (prev.wgsl-analyzer.overrideAttrs (old: rec {
+    version = "git";
+    src = final.fetchFromGitHub {
+      owner = "miguelklemmsilva";
+      repo = "wgsl-analyzer";
+      rev = "e3fb9dd701319e14bc785541f1eba3b9d4a6d164";
+      hash = "sha256-9umFr8ry/qmSVz9rZ+Than45Ia2Tr7YQMaHNYhDQjTE=";
+    };
+    # replaces cargoHash
+    cargoDeps = final.rustPlatform.fetchCargoVendor {
+      inherit src;
+      hash = "sha256-uFiuC46j2uZc/+vPoU/2WJ06z3lqa+6AIQHMEBINkhs=";
+    };
+  }));
 }
