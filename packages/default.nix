@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ config, ... }:
 
 {
   # neovim config is on /overlays/overrides/neovim
@@ -10,15 +10,15 @@
   };
 
   # Snippets based on: https://github.com/rafamadriz/friendly-snippets
-  environment.etc."nvim/snippets/elixir.json".source = ./snippets/elixir.json;
-  environment.etc."nvim/snippets/eelixir.json".source = ./snippets/eelixir.json;
-  environment.etc."nvim/snippets/tailwind.json".source = ./snippets/tailwind.json;
-  environment.etc."nvim/snippets/package.json".source = ./snippets/package.json;
+  environment.etc."nvim/snippets/elixir.json".source = ../snippets/elixir.json;
+  environment.etc."nvim/snippets/eelixir.json".source = ../snippets/eelixir.json;
+  environment.etc."nvim/snippets/tailwind.json".source = ../snippets/tailwind.json;
+  environment.etc."nvim/snippets/package.json".source = ../snippets/package.json;
 
   # last update: c0f1306db5814e0df76cd942ae59b03e43ea0493
-  environment.etc."nvim/snippets/temple.json".source = ./snippets/temple.json;
+  environment.etc."nvim/snippets/temple.json".source = ../snippets/temple.json;
 
-  environment.systemPackages = with pkgs; [
+  environment.systemPackages = with config.nix-neovim.pkgs; [
     ranger
 
     # Syntax Highlight
@@ -35,7 +35,7 @@
 
     # Language servers
     efm-langserver # General Purpose LSP
-    elixir-expert-lsp # Elixir
+    (import ./expert.nix { inherit config; }) # elixir
     tailwindcss-language-server # TailwindCSS
     #nixd # Nix
     nil # Nix

@@ -274,7 +274,7 @@ vim.lsp.config('*', {
 
 -- ELIXIR
 vim.lsp.config.expert = {
-  cmd = { "expert" },
+  cmd = { "expert", "--stdio" },
   filetypes = { 'elixir', 'eelixir', 'heex', 'surface' },
   root_dir = function(bufnr, cb)
     local fname = vim.api.nvim_buf_get_name(bufnr)

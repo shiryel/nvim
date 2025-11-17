@@ -4,7 +4,10 @@
   outputs = { ... }: {
     nixosModules.neovim = [
       {
-        imports = [ ./packages.nix ];
+        imports = [
+          ./options.nix
+          ./packages
+        ];
         nixpkgs.overlays = [
           (import ./overlays.nix)
         ];
