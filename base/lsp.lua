@@ -269,7 +269,13 @@ end
 
 vim.lsp.config('*', {
   root_markers = { '.git' },
-  capabilities = capabilities
+  capabilities = vim.tbl_deep_extend('force', capabilities, {
+    -- use the positionEncodings client capability to ensure all clients use the same position encoding
+    offsetEncoding = { 'utf-16' },
+    general = {
+      positionEncodings = { 'utf-16' },
+    },
+  }),
 })
 
 -- ELIXIR

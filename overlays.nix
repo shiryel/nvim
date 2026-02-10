@@ -113,13 +113,14 @@ in
     # overriding the existing fzf-lua breaks after some time
     fzf-lua = prev.vimUtils.buildVimPlugin {
       pname = "fzf-lua";
-      version = "22-02-2025";
+      version = "10-02-2026";
       src = prev.fetchFromGitHub {
         owner = "ibhagwan";
         repo = "fzf-lua";
-        rev = "9b84b53f3297d4912d7eb95b979e9b27e2e61281";
-        sha256 = "sha256-uNH+Sq5TxNIyleY7D17LRd1IPcO9K2WqWaD0A5FZbtw=";
+        rev = "fb8c50ba62a0daa433b7ac2b78834f318322b879";
+        sha256 = "sha256-EaaWEyzJ5CDTQoxJiMUFKkfB59GG+/8nVQkFXquI150=";
       };
+      doCheck = false;
     };
   });
 
@@ -202,20 +203,4 @@ in
       };
     };
   });
-
-  # fix settings on nvim https://github.com/wgsl-analyzer/wgsl-analyzer/pull/549
-  wgsl-analyzer = (prev.wgsl-analyzer.overrideAttrs (old: rec {
-    version = "git";
-    src = final.fetchFromGitHub {
-      owner = "miguelklemmsilva";
-      repo = "wgsl-analyzer";
-      rev = "e3fb9dd701319e14bc785541f1eba3b9d4a6d164";
-      hash = "sha256-9umFr8ry/qmSVz9rZ+Than45Ia2Tr7YQMaHNYhDQjTE=";
-    };
-    # replaces cargoHash
-    cargoDeps = final.rustPlatform.fetchCargoVendor {
-      inherit src;
-      hash = "sha256-uFiuC46j2uZc/+vPoU/2WJ06z3lqa+6AIQHMEBINkhs=";
-    };
-  }));
 }

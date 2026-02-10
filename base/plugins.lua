@@ -6,14 +6,18 @@ end
 
 -- Fzf-lua --
 local fzf = require('fzf-lua')
+fzf.setup({
+  color_icons = true,
+  file_icons = true,
+})
 nnoremap("<leader>b", fzf.buffers, "open buffers")
 nnoremap("<leader>f", fzf.files, "find or fd on a path")
 nnoremap("<leader>F", fzf.oldfiles, "opened files history")
 nnoremap("<leader>t", fzf.tabs, "open tabs")
 --nnoremap("<leader>st", fzf.tags, "search project tags")
-nnoremap("<leader>a", fzf.grep_project, "search all project lines")
+nnoremap("<leader>a", fzf.grep_project, "search all project lines with Rg")
 nnoremap("<leader>A", fzf.search_history, "search history")
-nnoremap("<leader>s", fzf.live_grep_glob, "live grep current project")
+nnoremap("<leader>s", fzf.live_grep, "live grep current project")
 nnoremap("<leader>S", fzf.live_grep_resume, "live grep continue last search")
 nnoremap("<leader>q", fzf.quickfix, "quickfix list")
 nnoremap("<leader>Q", fzf.quickfix_stack, "quickfix stack")
@@ -37,32 +41,28 @@ nnoremap("<leader>gs", fzf.git_status, "git status")
 nnoremap("<leader>gS", fzf.git_stash, "git stash")
 
 -- nvim-treesitter
-require("nvim-treesitter.configs").setup({
-  highlight = {
-    enable = true,
-    additional_vim_regex_highlighting = { "kotlin" },
+local _, treesitter_pattern = xpcall(require('nvim-treesitter').get_available, function() return '*' end)
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = treesitter_pattern,
+  callback = function()
+    local buf = vim.api.nvim_get_current_buf()
+    local path = vim.fs.normalize(vim.api.nvim_buf_get_name(buf))
+
+    -- highlighting
+
     -- some files are too big for treesitter to work...
-    disable = function(_, bufnr)
-      -- ignore if > 1mb (size in bytes)
-      return (fn.getfsize(bufnr) > 1000000) or false
+    -- ignore if > 3mb (size in bytes)
+    if (vim.fn.getfsize(path) < 3 * 1024 * 1024) then
+      pcall(vim.treesitter.start)
+
+      -- indentation
+      vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+
+      -- folds
+      vim.wo[0][0].foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+      vim.wo[0][0].foldmethod = 'expr'
     end
-  },
-  textobjects = {
-    enable = true
-  },
-  incremental_selection = {
-    enable = true,
-    keymaps = {
-      init_selection = "gnn",
-      node_incremental = "grn",
-      scope_incremental = "grc",
-      node_decremental = "grm"
-    }
-  },
-  indent = {
-    enable = true,
-    disable = { "gdscript", "elixir" } -- gdscript ident dont work
-  }
+  end
 })
 
 require("shade").setup()

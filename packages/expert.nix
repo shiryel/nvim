@@ -3,7 +3,7 @@
 with config.nix-neovim.pkgs;
 
 let
-  beam = beam26Packages;
+  beam = beam27Packages;
   erlang = beam.erlang;
   burritoTarget =
     {
@@ -20,8 +20,8 @@ beam.mixRelease rec {
   src = fetchFromGitHub {
     owner = "elixir-lang";
     repo = "expert";
-    rev = "583ee15fe361f892b51cbed823afc3fc61a9ed3f";
-    hash = "sha256-VwsGOWMzgh+TUq0NJ7a74c6n3qsjWxTwFafuVH2AQx0=";
+    rev = "d8c81cd5c686e770d35bcd10ede3980a733e1471";
+    hash = "sha256-xbwOjZnjm5QCqYyfFwPMppMZAcbqQ1DhK9KN/fUJLPI=";
     fetchSubmodules = true;
     fetchLFS = true;
   };
@@ -30,7 +30,7 @@ beam.mixRelease rec {
     inherit pname;
     inherit version;
     inherit src;
-    sha256 = "sha256-RIzkbQqOl9sLaTSigl+4tfxbOx1ikYIg6ZnYAJ62X7w=";
+    sha256 = "sha256-h28C39p+iclIMmlb1U5r8itC5lwpA0p/beGT+ShdK6U=";
     mixEnv = "prod";
     installPhase = ''
       runHook preInstall

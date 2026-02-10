@@ -40,7 +40,7 @@
     #nixd # Nix
     nil # Nix
     #ccls # GCC
-    zls # Zig
+    #zls # Zig
     rust-analyzer # Rust
     wgsl-analyzer # WGSL / WESL
     #python39Packages.gdtoolkit # GDScript
