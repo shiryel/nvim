@@ -102,7 +102,8 @@ let
     which-key-nvim
     ccc-nvim
     orgmode
-    markview-nvim
+    render-markdown-nvim
+    #markview-nvim
     _nvim-macros
     _nvim-lsp-endhints
   ];
@@ -136,8 +137,8 @@ in
           ${builtins.readFile ./base/plugins.lua}
           ${builtins.readFile ./base/lsp.lua}
 
-          ${builtins.readFile ./full/cmp.lua}
           ${builtins.readFile ./full/dap.lua}
+          ${builtins.readFile ./full/cmp.lua}
           ${builtins.readFile ./full/plugins.lua}
         EOF
       '';

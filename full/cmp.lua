@@ -1,5 +1,9 @@
 local blink = require("blink.cmp")
 
+-- Allows a markdown render to work on blink
+-- https://github.com/MeanderingProgrammer/render-markdown.nvim/issues/402#issuecomment-2905782858
+vim.treesitter.language.register('markdown', 'blink-cmp-documentation')
+
 blink.setup({
   -- 'default' (recommended) for mappings similar to built-in completions (C-y to accept)
   -- 'super-tab' for mappings similar to vscode (tab to accept)
@@ -17,6 +21,8 @@ blink.setup({
     preset = 'enter',
     ['<C-tab>'] = { function(cmp) cmp.show() end },
     ['<C-space>'] = { function(cmp) cmp.show({ providers = { 'snippets' } }) end },
+    ['<C-up>'] = { function(cmp) cmp.scroll_documentation_up(4) end },
+    ['<C-down>'] = { function(cmp) cmp.scroll_documentation_down(4) end },
   },
 
   appearance = {
@@ -45,15 +51,53 @@ blink.setup({
 
   signature = { enabled = true },
 
+  -- https://cmp.saghen.dev/configuration/reference#cmdline
+  cmdline = {
+    enabled = true,
+    keymap = { preset = 'inherit' },
+    sources = { 'buffer', 'cmdline' },
+    completion = {
+      -- Don't select by default, auto insert on selection
+      list = { selection = { preselect = false, auto_insert = true } },
+      ghost_text = { enabled = false },
+      menu = { auto_show = function(_, _) return true end },
+    },
+  },
+
+  -- https://cmp.saghen.dev/configuration/reference#terminal
+  term = {
+    enabled = true,
+    keymap = { preset = 'inherit' },
+  },
+
+  -- https://cmp.saghen.dev/configuration/reference#sources
   sources = {
     -- Default list of enabled providers defined so that you can extend it
     -- elsewhere in your config, without redefining it, due to `opts_extend`
     default = { 'lsp', 'path', 'snippets', 'buffer' },
 
     providers = {
-      -- Get completion from all "normal" buffers open
+      lsp = {
+        async = true, -- show the completions before this provider returns
+        --fallbacks = {}, -- force enable buffer source even when LSP results are available
+      },
+      path = {
+        opts = {
+          show_hidden_files_by_default = true,
+          -- Path completion from cwd instead of current buffer's directory
+          get_cwd = function(_)
+            return vim.fn.getcwd()
+          end,
+        }
+      },
+      snippets = {
+        opts = {
+          use_label_description = true,
+        }
+      },
       buffer = {
         opts = {
+          -- Get completion from all "normal" buffers open
           get_bufnrs = function()
             return vim.tbl_filter(function(bufnr)
               return vim.bo[bufnr].buftype == ''
@@ -61,15 +105,12 @@ blink.setup({
           end
         }
       },
-      -- Path completion from cwd instead of current buffer's directory
-      path = {
-        opts = {
-          get_cwd = function(_)
-            return vim.fn.getcwd()
-          end,
-        },
-      },
-    }
+    },
+
+    -- https://github.com/MeanderingProgrammer/render-markdown.nvim/issues/514#issuecomment-3290234734
+    per_filetype = {
+      markdown = { inherit_defaults = true },
+    },
   },
 
   -- (Default) Rust fuzzy matcher for typo resistance and significantly better performance

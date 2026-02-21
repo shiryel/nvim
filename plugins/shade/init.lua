@@ -73,6 +73,8 @@ local function create_floatwin(config)
 end
 
 local function create_overlay_window(winid, config)
+  config.border = "none" -- remove any winborder config
+
   local new_window = create_floatwin(config)
   state.overlays[winid] = new_window
 

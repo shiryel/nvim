@@ -131,6 +131,11 @@ Configure with:
 | `[[`          | aerial: next                               | n    |
 | `]]`          | aerial: prev                               | n    |
 
+## Messages
+
+- On basic config: `:messages`
+- On full config: `:NoiceAll`
+
 ## Example of how to add your own plugin
 
 ```nix

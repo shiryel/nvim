@@ -149,6 +149,8 @@ vim.api.nvim_create_autocmd('LspAttach', {
     -- Displays hover information about the symbol under the cursor in a floating
     -- window. Calling the function twice will jump into the floating window
     if client:supports_method('textDocument/hover') then
+      -- Scrolling could be implemented with a workaround, but it's easier to just jump inside the hover
+      -- see: https://github.com/neovim/neovim/issues/27288
       noremap("<leader>h", b.hover, "show symbol info")
     end
 

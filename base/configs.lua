@@ -47,7 +47,6 @@ o.encoding = "utf8"
 o.number = true
 o.relativenumber = true -- line number is relative to cursor
 o.mouse = "a"           -- enable mouse
-o.cursorline = true     -- highlight the current cursor line
 o.cursorcolumn = false  -- highlight the current cursor column
 o.smartindent = true    -- smart ident (priority for C like langs)
 o.autoindent = true     -- copy the ident of current line when using the o or O commands
@@ -67,6 +66,19 @@ o.scrolloff = 3         -- centers the cursor when moving
 -- give us a realtime preview of substitution before we send it "set list " show formating characters
 o.inccommand = "nosplit"
 o.lcs = "eol:\194\172,extends:\226\157\175,precedes:\226\157\174,tab:>-" -- the formating characters
+o.winborder = "rounded"
+
+-- highlight the current cursor line only on current buffer
+vim.api.nvim_create_autocmd('WinEnter', {
+  callback = function()
+      vim.opt_local.cursorline = true
+  end,
+})
+vim.api.nvim_create_autocmd('WinLeave', {
+  callback = function()
+      vim.opt_local.cursorline = false
+  end,
+})
 
 -- enables virtual text/lines diagnostic to only current line
 vim.diagnostic.config({

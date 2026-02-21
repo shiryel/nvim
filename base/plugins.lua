@@ -65,7 +65,7 @@ vim.api.nvim_create_autocmd('FileType', {
   end
 })
 
-require("shade").setup()
+--require("shade").setup()
 
 require("lightbulb").setup()
 

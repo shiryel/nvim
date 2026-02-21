@@ -13,6 +13,11 @@ require("noice").setup({
     },
     progress = { enabled = true },
     message = { enabled = true },
+
+    -- Disable LSP integration, let blink handle those
+    -- see: https://github.com/folke/noice.nvim/issues/1172
+    hover = { enabled = false },
+    signature = { enabled = false },
   },
   --routes = {
   --  {
@@ -26,7 +31,7 @@ require("noice").setup({
   --},
   -- to disable messages, see: :h shortmess or :h report
   messages = {
-    enabled = false,             -- enables the Noice messages UI
+    enabled = true,              -- enables the Noice messages UI
     view = "notify",             -- default view for messages
     view_error = "notify",       -- view for errors
     view_warn = "notify",        -- view for warnings
@@ -44,32 +49,24 @@ require("noice").setup({
         height = "auto",
       },
     },
-    popupmenu = {
-      relative = "editor",
-      position = {
-        row = "52%",
-        col = "50%",
-      },
-      size = {
-        width = 60,
-        height = 10,
-      },
-      border = {
-        style = "rounded",
-        padding = { 0, 1 },
-      },
-      win_options = {
-        winhighlight = { Normal = "Normal", FloatBorder = "DiagnosticInfo" },
-      },
-    },
-  },
-  -- you can enable a preset for easier configuration
-  presets = {
-    lsp_doc_border = true, -- add a border to hover docs and signature help
-    --command_palette = true,       -- position the cmdline and popupmenu together
-    --bottom_search = true,         -- use a classic bottom cmdline for search
-    --long_message_to_split = true, -- long messages will be sent to a split
-    --inc_rename = false,           -- enables an input dialog for inc-rename.nvim
+    --popupmenu = {
+    --  relative = "editor",
+    --  position = {
+    --    row = "52%",
+    --    col = "50%",
+    --  },
+    --  size = {
+    --    width = 60,
+    --    height = 10,
+    --  },
+    --  border = {
+    --    style = "rounded",
+    --    padding = { 0, 1 },
+    --  },
+    --  win_options = {
+    --    winhighlight = { Normal = "Normal", FloatBorder = "DiagnosticInfo" },
+    --  },
+    --},
   },
 })
 
@@ -377,31 +374,14 @@ require('orgmode').setup({
   org_default_notes_file = '~/orgfiles/refile.org',
 })
 
--- markview-nvim
-require("markview").setup {
-  preview = {
-    enable = true,
-    icon_provider = "devicons",
+-- render-markdown-nvim
+require('render-markdown').setup({
+  file_types = { 'markdown', 'gitcommit', 'blink-cmp-documentation' },
+  completions = { lsp = { enabled = true } },
+  code = {
+    style = 'normal',
   },
-  html = {
-    enable = true,
-  },
-  latex = {
-    enable = true,
-  },
-  markdown = {
-    enable = true,
-  },
-  markdown_inline = {
-    enable = true,
-  },
-  typst = {
-    enable = true,
-  },
-  yaml = {
-    enable = true,
-  }
-}
+})
 
 -- nvim-macros
 -- Usage:

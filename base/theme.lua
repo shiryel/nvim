@@ -67,13 +67,14 @@ local a = {
   -- structure
   panel_border = c.gray_0,
   popup_border = c.gray_1,
-  popup_bg = c.gray_2,
+  doc_code_blocks = c.gray_2,
+  popup_bg = c.gray_4,
   panel_bg = c.gray_4,
 
   -- intermediary
-  line_bump = c.gray_5, -- folds / title bg
-  current_place = c.gray_6,
-  selection = c.gray_7,
+  current_place = c.gray_5,
+  selection = c.gray_6,
+  line_bump = c.gray_7, -- folds / title bg
   cursor_bg = c.gray_8,
   panel_border_focus = c.gray_8,
 
@@ -118,7 +119,7 @@ local groups = {
   -- on the value of 'background'.  You can see the current settings with the
   -- ":highlight" command.
 
-  ['ColorColumn'] = {},                                            -- Used for the columns set with 'colorcolumn'.
+  ['ColorColumn'] = { bg = a.doc_code_blocks },                    -- Used for the columns set with 'colorcolumn'.
   ['Conceal'] = {},                                                -- Placeholder characters substituted for concealed text (see 'conceallevel').
   ['CurSearch'] = {},                                              -- Current match for the last search pattern (see 'hlsearch'). Note: This is correct after a search, but may get outdated if changes are made or the screen is redrawn.
   ['Cursor'] = { bg = a.cursor_bg, fg = a.text },                  -- Character under the cursor.
@@ -161,6 +162,7 @@ local groups = {
   ['NormalNC'] = { fg = a.text_no_focus, bg = a.panel_bg },        -- Normal text in non-current windows.
 
   -- Popup menus goes on top of floating windows
+  -- NOTE: blink also uses these as defaults, see: https://cmp.saghen.dev/configuration/appearance.html#highlight-groups
   ['Pmenu'] = { link = 'NormalFloat' },                -- Popup menu: Normal item.
   ['PmenuSel'] = { bg = a.current_place },             -- Popup menu: Selected item. Combined with |hl-Pmenu|.
   ['PmenuKind'] = { link = 'Pmenu' },                  -- Popup menu: Normal item "kind".
