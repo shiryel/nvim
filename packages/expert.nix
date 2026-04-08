@@ -3,6 +3,7 @@
 with config.nix-neovim.pkgs;
 
 let
+  system = stdenv.hostPlatform.system;
   beam = beam27Packages;
   erlang = beam.erlang;
   burritoTarget =

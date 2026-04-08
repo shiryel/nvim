@@ -78,7 +78,9 @@ blink.setup({
 
     providers = {
       lsp = {
-        async = true, -- show the completions before this provider returns
+        -- show the completions before this provider returns
+        -- needs to be disabled, otherwise the "correct option" gets replaced when the provider returns
+        async = false,
         --fallbacks = {}, -- force enable buffer source even when LSP results are available
       },
       path = {
