@@ -46,7 +46,6 @@
     #python39Packages.gdtoolkit # GDScript
     #python310Packages.python-lsp-server # pylsp
     #nodePackages.svelte-language-server
-    vscode-langservers-extracted # JS
     tinymist # typst lsp
     lua-language-server
     terraform-ls

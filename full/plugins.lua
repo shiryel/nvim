@@ -415,3 +415,28 @@ require("lsp-endhints").setup {
   },
   autoEnableHints = true,
 }
+
+
+-- JS / TS LSP
+-- Replaces:
+-- - vscode-langservers-extracted
+-- - typescript-language-server
+-- Requires: nodejs
+require("typescript-tools").setup {
+  settings = {
+    separate_diagnostic_server = true,           -- spawn additional tsserver instance to calculate diagnostics on it
+    publish_diagnostic_on = "insert_leave",
+    tsserver_max_memory = "auto",                -- memory limit in megabytes or "auto"(basically no limit)
+    tsserver_locale = "en",
+    complete_function_calls = false,
+    --tsserver_path = "${final.typescript}/lib/node_modules/typescript/lib/tsserver.js",
+    include_completions_with_insert_text = true,
+    -- CodeLens
+    -- WARNING: Experimental feature also in VSCode, because it might hit performance of server.
+    -- possible values: ("off"|"all"|"implementations_only"|"references_only")
+    --code_lens = "off",
+    -- by default code lenses are displayed on all referencable values and for some of you it can
+    -- be too much this option reduce count of them by removing member references from lenses
+    disable_member_code_lens = true,
+  }
+}

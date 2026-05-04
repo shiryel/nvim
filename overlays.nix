@@ -70,6 +70,7 @@ let
     # LSP
     aerial-nvim
     nvim-lspconfig # for Lsp* commands only
+    typescript-tools-nvim # JS
     #flutter-tools-nvim # sets up dartls + flutter utils
 
     # COMPLETION
@@ -145,6 +146,10 @@ in
       packages.myPlugins = {
         # loaded on launch
         start = base_plugins ++ full_plugins ++ [
+          # TODO:
+          # nvim-treesitter has been archived, maybe change to: https://github.com/romus204/tree-sitter-manager.nvim
+          # or build it manually: https://www.reddit.com/r/neovim/comments/1sj1ggo/treesitter_without_nvimtreesitter_a_guide/
+          # with: pkgs.tree-sitter.withPlugins (_: pkgs.tree-sitter.allGrammars)
           (final.vimPlugins.nvim-treesitter.withPlugins (_: final.vimPlugins.nvim-treesitter.allGrammars))
         ];
       };
