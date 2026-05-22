@@ -45,10 +45,10 @@ Configure with:
 | `<leader>E<down>`  | ranger: open down                       | n    |
 | `<leader>E<up>`    | ranger: open up                         | n    |
 | `<leader>E<right>` | ranger: open right                      | n    |
-| `<leader>b`        | open buffers                            | n    |
+| `<leader>ob`       | open buffers                            | n    |
 | `<leader>f`        | find or fd on a path                    | n    |
-| `<leader>F`        | opened files history                    | n    |
-| `<leader>t`        | open tabs                               | n    |
+| `<leader>of`       | opened files history                    | n    |
+| `<leader>ot`       | open tabs                               | n    |
 | `<leader>T`        | search project tags                     | n    |
 | `<leader>a`        | search all project lines                | n    |
 | `<leader>A`        | search history                          | n    |
@@ -57,15 +57,15 @@ Configure with:
 | `<leader>q`        | quickfix list                           | n    |
 | `<leader>Q`        | quickfix history                        | n    |
 | `<leader>l`        | location list                           | n    |
-| `<leader>o`        | jumps                                   | n    |
+| `<leader>oo`       | jumps                                   | n    |
 | `<leader>"`        | registers                               | n    |
 | `<leader>k`        | keymaps                                 | n    |
 | `<leader>:`        | commands history                        | n    |
 | `<leader>/`        | search history                          | n    |
 | `<leader>'`        | marks                                   | n    |
 | `<leader>?`        | code actions                            | n    |
-| `<leader>c`        | git changes                             | n    |
-| `<leader>gc`       | git commit log (project)                | n    |
+| `<leader>gc`       | git changes                             | n    |
+| `<leader>ga`       | git commit log (project)                | n    |
 | `<leader>gb`       | git commit log (buffer)                 | n    |
 | `<leader>gt`       | git branches                            | n    |
 | `<leader>gs`       | git status                              | n    |
@@ -100,8 +100,8 @@ Configure with:
 | `<leader>ct`  | diffview: choose the THEIRS version        | n    |
 | `<leader>cb`  | diffview: choose the BASE version          | n    |
 | `<leader>ca`  | diffview: choose all versions              | n    |
-| `<leader>gd`  | Diff view                                  | n    |
-| `<leader>gD`  | Diff view master                           | n    |
+| `<leader>gd`  | Diff view toggle                           | n    |
+| `<leader>gD`  | Diff view custom toggle                    | n    |
 | `<leader>db`  | Toggle breakpoint                          | n    |
 | `<leader>dB`  | Set breakpoint                             | n    |
 | `<leader>dr`  | Repl open                                  | n    |
@@ -122,7 +122,7 @@ Configure with:
 | `<leader>dui` | DAP UI toggle                              | n    |
 | `<leader>dur` | DAP UI reset                               | n    |
 | `<leader>due` | DAP UI eval                                | n    |
-| `<leader>c`   | pick color                                 | n    |
+| `<leader>C`   | pick color                                 | n    |
 | `<c-a>`       | spelunk: add to list                       | n    |
 | `<c-s>`       | spelunk: toggle list                       | n    |
 | `<c-h>`       | spelunk: next bookmark                     | n    |
@@ -130,6 +130,11 @@ Configure with:
 | `<leader>A`   | toggle aerial                              | n    |
 | `[[`          | aerial: next                               | n    |
 | `]]`          | aerial: prev                               | n    |
+| `<leader>tt`  | codecompanion: toggle chat                 | n    |
+| `<leader>tT`  | codecompanion: actions                     | n    |
+| `<leader>ta`  | codecompanion: chat prompt                 | n    |
+| `<leader>ti`  | codecompanion: inline prompt               | nv   |
+| `<leader>ta`  | codecompanion: add selection to chat       | v    |
 
 ## Messages
 

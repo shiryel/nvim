@@ -3,6 +3,18 @@ local function nnoremap(bind, command, desc)
   return vim.keymap.set("n", bind, command, { noremap = true, silent = true, desc = desc })
 end
 
+local function nnoremap_verb(bind, command, desc)
+  return vim.keymap.set("n", bind, command, { noremap = true, silent = false, desc = desc })
+end
+
+local function vnoremap(bind, command, desc)
+  return vim.keymap.set("v", bind, command, { noremap = true, silent = true, desc = desc })
+end
+
+local function vnoremap_verb(bind, command, desc)
+  return vim.keymap.set("v", bind, command, { noremap = true, silent = false, desc = desc })
+end
+
 require("noice").setup({
   lsp = {
     -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
@@ -72,45 +84,201 @@ require("noice").setup({
 
 -- codecompanion-nvim
 
+---@type string|table
+local default_adapter = "llamacpp"
+if vim.loop.os_uname().sysname == "Darwin" then
+  default_adapter = {
+    name = "claude_code",
+    model = "opus-4.8",
+  }
+end
+
 require("codecompanion").setup({
-  opts = {
-    -- https://github.com/olimorris/codecompanion.nvim/blob/main/lua/codecompanion/config.lua
-    strategies = {
-      chat = {
-        adapter = "ollama",
+  -- https://github.com/olimorris/codecompanion.nvim/blob/main/lua/codecompanion/config.lua
+  interactions = {
+    -- https://codecompanion.olimorris.dev/configuration/chat-buffer
+    chat = {
+      adapter = default_adapter,
+      show_settings = true, -- Show LLM settings at the top of the chat buffer?
+      keymaps = {
+        send = {
+          modes = { n = { "<C-CR>", "<C-s>" }, i = { "<C-CR>", "<C-s>" } },
+          opts = {},
+        },
+        close = false
       },
-      inline = {
-        adapter = "ollama",
+      editor_context = {
+        ["buffer"] = {
+          opts = {
+            -- Always sync the buffer by sharing its "diff"
+            -- Or choose "all" to share the entire buffer
+            default_params = "diff",
+          },
+        },
       },
-      agent = {
-        adapter = "ollama",
+      -- https://codecompanion.olimorris.dev/usage/chat-buffer/agents-tools#built-in-tools
+      -- https://github.com/olimorris/codecompanion.nvim/blob/b1cbe52ecd71e7b0ed43ac1dc6eb3aab4099db00/lua/codecompanion/config.lua#L191
+      tools = {
+        ["grep_search"] = {
+          require_approval_before = false,
+          enabled = function(adapter)
+            return vim.fn.executable("rg") == 1
+          end,
+        },
+        ["read_file"] = {
+          opts = {
+            require_approval_before = false,
+          },
+        },
+        ["get_changed_files"] = {
+          opts = {
+            require_approval_before = false,
+          },
+        },
+        ["memory"] = {
+          opts = {
+            require_approval_before = true,
+            whitelist = {
+              { path = "~/.dotfiles/PERSONAL.md", as = "/personal" },
+            },
+          },
+        },
+      },
+      opts = {
+        context_management = {
+          trigger = 0.9, -- percent of the context window
+        },
       },
     },
-    adapters = {
-      coder = function()
-        return require("codecompanion.adapters").extend("ollama", {
-          schema = {
-            model = {
-              default = 'qwen2.5-coder:32b',
-            },
-            num_ctx = {
-              default = 32768,
-            },
+    inline = {
+      adapter = default_adapter,
+    },
+    cmd = {
+      adapter = default_adapter,
+    },
+    cli = {
+      agent = default_adapter,
+    },
+    background = {
+      adapter = default_adapter,
+      chat = {
+        opts = {
+          -- currently breaks selecting default adapter
+          -- and only works with HTTP adapters
+          -- see: https://github.com/olimorris/codecompanion.nvim/blob/b1cbe52ecd71e7b0ed43ac1dc6eb3aab4099db00/lua/codecompanion/interactions/background/init.lua#L64
+          enabled = false,
+        },
+      },
+    },
+  },
+  adapters = {
+    http = {
+      -- requires: --reasoning-format deepseek --tools all
+      llamacpp = function()
+        return require("codecompanion.adapters").extend("openai_compatible", {
+          env = {
+            url = "http://127.0.0.1:9876", -- replace with your llama.cpp instance
+            chat_url = "/v1/chat/completions",
+          },
+          handlers = {
+            parse_message_meta = function(self, data)
+              if data.extra and data.extra.reasoning_content then
+                data.output.reasoning = { content = data.extra.reasoning_content }
+                if data.output.content == "" then
+                  data.output.content = nil
+                end
+              end
+              return data
+            end,
           },
         })
       end,
     },
-    display = {
-      diff = {
-        enabled = true,
-        close_chat_at = 240,  -- Close an open chat buffer if the total columns of your display are less than...
-        layout = 'vertical',  -- vertical|horizontal split for default provider
-        opts = { 'internal', 'filler', 'closeoff', 'algorithm:patience', 'followwrap', 'linematch:120' },
-        provider = 'default', -- default|mini_diff
+    acp = {
+      claude_code = function()
+        return require("codecompanion.adapters").extend("claude_code", {
+        })
+      end,
+    },
+  },
+  rules = {
+    personal = {
+      files = {
+        { path = "~/.local/PERSONAL.md", parser = "codecompanion" },
+      },
+    },
+    opts = {
+      chat = {
+        autoload = { "default", "personal" },
       },
     },
   },
+  -- mcp = {
+  --   servers = {
+  --     ["memory"] = {
+  --       cmd = { "nix", "run", "nixpkgs\\#mcp-server-memory" },
+  --     },
+  --   },
+  -- },
+  -- extensions = {
+  --  mcphub = {
+  --    callback = "mcphub.extensions.codecompanion",
+  --    opts = {
+  --      make_vars = true,
+  --      make_slash_commands = true,
+  --      show_result_in_chat = true
+  --    }
+  --  }
+  -- },
+  display = {
+    action_palette = {
+      width = 95,
+      height = 10,
+      prompt = "Prompt ",
+      provider = "default", -- Can be "default", "telescope", "fzf_lua", "mini_pick" or "snacks". If not specified, the plugin will autodetect installed providers.
+      opts = {
+        show_preset_actions = true,
+        show_preset_prompts = true,
+        title = "CodeCompanion actions",
+      },
+    },
+    diff = {
+      enabled = true,
+      close_chat_at = 240,   -- Close an open chat buffer if the total columns of your display are less than...
+      layout = 'horizontal', -- vertical|horizontal split for default provider
+      opts = { 'internal', 'filler', 'closeoff', 'algorithm:patience', 'followwrap', 'linematch:120' },
+      provider = 'default',  -- default|mini_diff
+    },
+  },
 })
+
+vim.api.nvim_create_autocmd("User", {
+  pattern = "CodeCompanionChatCreated",
+  callback = function(args)
+    local chat = require("codecompanion").buf_get_chat(args.data.bufnr)
+    chat:add_callback("on_checkpoint", function(_c, data)
+      local context_window = data.adapter.meta and data.adapter.meta.context_window
+      if not context_window then
+        return
+      end
+
+      local usage = data.estimated_tokens / context_window
+      if usage > 0.8 then
+        vim.notify(
+          string.format("Context window %.0f%% full", usage * 100),
+          vim.log.levels.WARN
+        )
+      end
+    end)
+  end,
+})
+
+nnoremap("<leader>tt", "<cmd>CodeCompanionChat Toggle<cr>", "Toggle CodeCompanion Chat")
+nnoremap("<leader>tT", "<cmd>CodeCompanionActions<cr>", "CodeCompanion Actions")
+nnoremap_verb("<leader>ta", ":CodeCompanionChat ", "CodeCompanionChat Prompt")
+nnoremap_verb("<leader>ti", ":CodeCompanion ", "CodeCompanion Inline Prompt")
+vnoremap_verb("<leader>ti", ":'<,'>CodeCompanion ", "CodeCompanion Inline Prompt")
+vnoremap("<leader>ta", "<cmd>CodeCompanionChat Add<cr>", "Add selection to Chat")
 
 -- aerial
 require("aerial").setup({
@@ -319,8 +487,37 @@ require("diffview").setup({
     },
   },
 })
-nnoremap("<leader>gd", ":DiffviewOpen<cr>", "Diff view")
-nnoremap("<leader>gD", ":DiffviewOpen master<cr>", "Diff view master")
+
+-- see: https://github.com/sindrets/diffview.nvim/issues/11
+local last_tabpage = vim.api.nvim_get_current_tabpage()
+vim.api.nvim_create_user_command("DiffviewCustomToggle", function()
+  local lib = require("diffview.lib")
+  local view = lib.get_current_view()
+  if view then
+    -- Current tabpage is a Diffview: go to previous tabpage
+    vim.api.nvim_set_current_tabpage(last_tabpage)
+  else
+    -- We are not in a Diffview: save current tabpagenr and go to a Diffview.
+    last_tabpage = vim.api.nvim_get_current_tabpage()
+    if #lib.views > 0 then
+      -- An open Diffview exists: go to that one.
+      vim.api.nvim_set_current_tabpage(lib.views[1].tabpage)
+    else
+      -- No open Diffview exists: Open a new one from a branch
+      require("fzf-lua").fzf_exec("git branch -a", {
+        prompt = "diff:",
+        actions = {
+          ["default"] = function(selected)
+            vim.cmd.DiffviewOpen({ args = { selected[1] } })
+          end,
+        },
+      })
+    end
+  end
+end, { nargs = "*" })
+
+nnoremap("<leader>gd", ":DiffviewToggle<cr>", "Diff view toggle")
+nnoremap("<leader>gD", ":DiffviewCustomToggle<cr>", "Diff view custom toggle")
 
 -- gitsigns
 require("gitsigns").setup({
@@ -363,7 +560,7 @@ require("ccc").setup({
   }
 })
 
-nnoremap("<leader>c", ":CccPick<CR>", "pick color")
+nnoremap("<leader>C", ":CccPick<CR>", "pick color")
 
 -- tmux-nvim
 require("tmux").setup()
@@ -376,7 +573,7 @@ require('orgmode').setup({
 
 -- render-markdown-nvim
 require('render-markdown').setup({
-  file_types = { 'markdown', 'gitcommit', 'blink-cmp-documentation' },
+  file_types = { 'markdown', 'gitcommit', 'blink-cmp-documentation', 'codecompanion' },
   completions = { lsp = { enabled = true } },
   code = {
     style = 'normal',
@@ -424,9 +621,9 @@ require("lsp-endhints").setup {
 -- Requires: nodejs
 require("typescript-tools").setup {
   settings = {
-    separate_diagnostic_server = true,           -- spawn additional tsserver instance to calculate diagnostics on it
+    separate_diagnostic_server = true, -- spawn additional tsserver instance to calculate diagnostics on it
     publish_diagnostic_on = "insert_leave",
-    tsserver_max_memory = "auto",                -- memory limit in megabytes or "auto"(basically no limit)
+    tsserver_max_memory = "auto",      -- memory limit in megabytes or "auto"(basically no limit)
     tsserver_locale = "en",
     complete_function_calls = false,
     --tsserver_path = "${final.typescript}/lib/node_modules/typescript/lib/tsserver.js",

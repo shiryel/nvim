@@ -93,6 +93,7 @@ blink.setup({
         }
       },
       snippets = {
+        min_keyword_length = 1,
         opts = {
           use_label_description = true,
         }
@@ -112,6 +113,7 @@ blink.setup({
     -- https://github.com/MeanderingProgrammer/render-markdown.nvim/issues/514#issuecomment-3290234734
     per_filetype = {
       markdown = { inherit_defaults = true },
+      codecompanion = { "codecompanion" },
     },
   },
 

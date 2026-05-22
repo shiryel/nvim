@@ -10,10 +10,10 @@ fzf.setup({
   color_icons = true,
   file_icons = true,
 })
-nnoremap("<leader>b", fzf.buffers, "open buffers")
+nnoremap("<leader>ob", fzf.buffers, "open buffers")
 nnoremap("<leader>f", fzf.files, "find or fd on a path")
-nnoremap("<leader>F", fzf.oldfiles, "opened files history")
-nnoremap("<leader>t", fzf.tabs, "open tabs")
+nnoremap("<leader>of", fzf.oldfiles, "opened files history")
+nnoremap("<leader>ot", fzf.tabs, "open tabs")
 --nnoremap("<leader>st", fzf.tags, "search project tags")
 nnoremap("<leader>a", fzf.grep_project, "search all project lines with Rg")
 nnoremap("<leader>A", fzf.search_history, "search history")
@@ -23,16 +23,16 @@ nnoremap("<leader>q", fzf.quickfix, "quickfix list")
 nnoremap("<leader>Q", fzf.quickfix_stack, "quickfix stack")
 nnoremap("<leader>l", fzf.loclist, "location list")
 nnoremap("<leader>L", fzf.loclist_stack, "location stack")
-nnoremap("<leader>o", fzf.jumps, "jumps")
+nnoremap("<leader>oo", fzf.jumps, "jumps")
 nnoremap("<leader>\"", fzf.registers, "registers")
 nnoremap("<leader>k", fzf.keymaps, "keymaps")
-nnoremap("<leader>c", fzf.changes, "changes")
+nnoremap("<leader>gc", fzf.changes, "changes")
 nnoremap("<leader>:", fzf.command_history, "commands history")
 nnoremap("<leader>/", fzf.search_history, "search history")
 nnoremap("<leader>'", fzf.marks, "marks")
 -- git
 -- commits: checkout <cr> | reset mixed <C-r>m | reset soft <C-r>s | reset hard <C-r>h
-nnoremap("<leader>gc", fzf.git_commits, "git commit log (project)")
+nnoremap("<leader>ga", fzf.git_commits, "git commit log (project)")
 -- buffer commits: checkout <cr>
 nnoremap("<leader>gb", fzf.git_bcommits, "git commit log (buffer)")
 -- branches: checkout <cr> | track <C-t> | rebase <C-r> | create <C-a> | switch <C-s> | delete <C-d> | merge <C-y>

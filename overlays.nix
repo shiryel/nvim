@@ -124,6 +124,17 @@ in
       };
       doCheck = false;
     };
+
+    diffview-nvim = vprev.diffview-nvim.overrideAttrs (old: {
+      version = "git";
+      src = prev.fetchFromGitHub {
+        owner = "dlyongemallo";
+        repo = "diffview.nvim";
+        rev = "e4871fdf697057e036690d6ad9ebba334711cfb6";
+        sha256 = "sha256-m1ErPWj/YP54g9ENoC8OWiogm2rNNbcbdMu4z4S0RrQ=";
+      };
+      doCheck = false;
+    });
   });
 
   # Fixes Neovide recompiling every update
